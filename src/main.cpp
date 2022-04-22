@@ -19,8 +19,8 @@
 
 // WiFI & MQTT
 const char* id = "gdWS1"; // Unique Scale ID
-const char* ssid = "RFID_MSF4.0_2.4";
-const char* password = "$HRDC2k19";
+const char* ssid = "!!!WIFI_ID!!!";
+const char* password = "!!!WIFI_PASSWORD!!!";
 const char* mqtt_server = "192.168.0.164";
 
 // PWM output settings

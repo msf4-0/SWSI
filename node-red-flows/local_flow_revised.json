@@ -1,0 +1,5642 @@
+[
+    {
+        "id": "0c07bffa7abc86ef",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "6bb54a7d1ee8c3f6",
+        "type": "aedes broker",
+        "z": "0c07bffa7abc86ef",
+        "name": "MQTT Broker",
+        "mqtt_port": "1883",
+        "mqtt_ws_bind": "port",
+        "mqtt_ws_port": "",
+        "mqtt_ws_path": "",
+        "cert": "",
+        "key": "",
+        "certname": "",
+        "keyname": "",
+        "dburl": "",
+        "usetls": false,
+        "x": 630,
+        "y": 40,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "c52f2d0f73a664df",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "Update info on local dashboard",
+        "info": "",
+        "x": 210,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "9cc3ea970b7c110d",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "Station Dashboard V1",
+        "info": "",
+        "x": 250,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "87363e6dbb321f13",
+        "type": "inject",
+        "z": "0c07bffa7abc86ef",
+        "d": true,
+        "name": "Update time",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "update",
+        "payload": "",
+        "payloadType": "date",
+        "x": 180,
+        "y": 1120,
+        "wires": [
+            [
+                "df403eb4096aba92"
+            ]
+        ]
+    },
+    {
+        "id": "b4142dc1727a795d",
+        "type": "ui_button",
+        "z": "0c07bffa7abc86ef",
+        "name": "Update",
+        "group": "28d1262.fa1c8da",
+        "order": 1,
+        "width": 9,
+        "height": 1,
+        "passthru": true,
+        "label": "Update",
+        "tooltip": "Update graph",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "num",
+        "topic": "update",
+        "topicType": "str",
+        "x": 200,
+        "y": 1080,
+        "wires": [
+            [
+                "df403eb4096aba92"
+            ]
+        ]
+    },
+    {
+        "id": "67bb08f92b7fba9b",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "EXTRACT DATA",
+        "info": "To plot graph and display current qty",
+        "x": 220,
+        "y": 1400,
+        "wires": []
+    },
+    {
+        "id": "60f5d9f5d607a2fb",
+        "type": "ui_button",
+        "z": "0c07bffa7abc86ef",
+        "name": "Update WS1",
+        "group": "cf513a427bf0f699",
+        "order": 1,
+        "width": 20,
+        "height": 1,
+        "passthru": true,
+        "label": "Update",
+        "tooltip": "Update graph",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "num",
+        "topic": "Workstation 1",
+        "topicType": "str",
+        "x": 210,
+        "y": 1580,
+        "wires": [
+            [
+                "17cadf9e68628c49"
+            ]
+        ]
+    },
+    {
+        "id": "b08fd4e84fd1463f",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "Station Dashboard V2",
+        "info": "",
+        "x": 200,
+        "y": 1340,
+        "wires": []
+    },
+    {
+        "id": "8dedee42f5aeb239",
+        "type": "inject",
+        "z": "0c07bffa7abc86ef",
+        "d": true,
+        "name": "Update time",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "Workstation 1",
+        "payload": "",
+        "payloadType": "date",
+        "x": 200,
+        "y": 1480,
+        "wires": [
+            [
+                "17cadf9e68628c49"
+            ]
+        ]
+    },
+    {
+        "id": "760ac249cba56430",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "ed6f1410.bde42",
+        "order": 2,
+        "width": 10,
+        "height": 1,
+        "name": "",
+        "label": "Quantity",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 960,
+        "y": 1420,
+        "wires": []
+    },
+    {
+        "id": "e8ce54ecbfeb9dc7",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Get latest qty",
+        "func": "if (msg.topic == \"Workstation 1\")\n{\n    if (msg.payload.length == 0)\n    {\n        msg.payload = 0\n    }\n    else\n    {\n        msg.payload = msg.payload[0].value;\n    }\n    \n    flow.set('ws1.qty', msg.payload);\n}\nelse\n{\n    msg.payload = flow.get('ws1.qty');\n}\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 770,
+        "y": 1420,
+        "wires": [
+            [
+                "760ac249cba56430"
+            ]
+        ]
+    },
+    {
+        "id": "9c261f5a943b328d",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "cfb9167f.800f5",
+        "order": 2,
+        "width": 10,
+        "height": 1,
+        "name": "",
+        "label": "Quantity",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 960,
+        "y": 1460,
+        "wires": []
+    },
+    {
+        "id": "fcad59f2547cdf54",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Get latest qty",
+        "func": "if (msg.topic == \"Workstation 2\")\n{\n    if (msg.payload.length == 0)\n    {\n        msg.payload = 0\n    }\n    else\n    {\n        msg.payload = msg.payload[0].value;\n    }\n    \n    flow.set('ws2.qty', msg.payload);\n    \n}\nelse\n{\n    msg.payload = flow.get('ws2.qty');\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 770,
+        "y": 1460,
+        "wires": [
+            [
+                "9c261f5a943b328d"
+            ]
+        ]
+    },
+    {
+        "id": "6f158b24986c59e3",
+        "type": "ui_button",
+        "z": "0c07bffa7abc86ef",
+        "name": "Update WS2",
+        "group": "aa43408ee01e6c65",
+        "order": 1,
+        "width": 20,
+        "height": 1,
+        "passthru": true,
+        "label": "Update",
+        "tooltip": "Update graph",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "num",
+        "topic": "Workstation 2",
+        "topicType": "str",
+        "x": 210,
+        "y": 1620,
+        "wires": [
+            [
+                "17cadf9e68628c49"
+            ]
+        ]
+    },
+    {
+        "id": "73427ff0d92b279c",
+        "type": "inject",
+        "z": "0c07bffa7abc86ef",
+        "d": true,
+        "name": "Update time",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "Workstation 2",
+        "payload": "",
+        "payloadType": "date",
+        "x": 200,
+        "y": 1520,
+        "wires": [
+            [
+                "17cadf9e68628c49"
+            ]
+        ]
+    },
+    {
+        "id": "f9403241aed1be21",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "ed6f1410.bde42",
+        "order": 1,
+        "width": 10,
+        "height": 1,
+        "name": "",
+        "label": "Name",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 950,
+        "y": 1720,
+        "wires": []
+    },
+    {
+        "id": "7b959e27f6c803ac",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "DISPLAY COMPONENTS NAME",
+        "info": "",
+        "x": 830,
+        "y": 1680,
+        "wires": []
+    },
+    {
+        "id": "22ef74b1e17308d3",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "cfb9167f.800f5",
+        "order": 1,
+        "width": 10,
+        "height": 1,
+        "name": "",
+        "label": "Name",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 950,
+        "y": 1760,
+        "wires": []
+    },
+    {
+        "id": "4767b3b6d58bdc2e",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "func": "msg1 = {payload: flow.get('ws1.name')};\nmsg2 = {payload: flow.get('ws2.name')};\n\nreturn [msg1,msg2];",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 1740,
+        "wires": [
+            [
+                "f9403241aed1be21",
+                "b31073ab937ef897"
+            ],
+            [
+                "22ef74b1e17308d3"
+            ]
+        ]
+    },
+    {
+        "id": "6158fc4f9eb5f5c1",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "DISPLAY CURRENT QTY",
+        "info": "",
+        "x": 810,
+        "y": 1360,
+        "wires": []
+    },
+    {
+        "id": "e611112c281f7d70",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "ed6f1410.bde42",
+        "order": 6,
+        "width": 10,
+        "height": 1,
+        "name": "",
+        "label": "Threshold",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 960,
+        "y": 1840,
+        "wires": []
+    },
+    {
+        "id": "b53b74334d0315fb",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "cfb9167f.800f5",
+        "order": 6,
+        "width": 10,
+        "height": 1,
+        "name": "",
+        "label": "Threshold",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 960,
+        "y": 1880,
+        "wires": []
+    },
+    {
+        "id": "d01ca5574c711c08",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "DISPLAY THRESHOLD",
+        "info": "",
+        "x": 800,
+        "y": 1800,
+        "wires": []
+    },
+    {
+        "id": "a7e18ccc5ac0de73",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "func": "msg1 = {payload: flow.get('ws1.threshold')};\nmsg2 = {payload: flow.get('ws2.threshold')};\n\nreturn [msg1,msg2];",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 1860,
+        "wires": [
+            [
+                "e611112c281f7d70"
+            ],
+            [
+                "b53b74334d0315fb"
+            ]
+        ]
+    },
+    {
+        "id": "d6f85d18d6c6bd55",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "ed6f1410.bde42",
+        "order": 7,
+        "width": 10,
+        "height": 1,
+        "name": "",
+        "label": "Battery Level",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 970,
+        "y": 1960,
+        "wires": []
+    },
+    {
+        "id": "7cbd4c841713e00c",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "cfb9167f.800f5",
+        "order": 7,
+        "width": 10,
+        "height": 1,
+        "name": "",
+        "label": "Battery Level",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 970,
+        "y": 2000,
+        "wires": []
+    },
+    {
+        "id": "13f564d0737f0a99",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "DISPLAY BATTERY LEVEL",
+        "info": "",
+        "x": 820,
+        "y": 1920,
+        "wires": []
+    },
+    {
+        "id": "23497fbae83a0e82",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "func": "msg1 = {payload: flow.get('ws1.bat_lvl')};\nmsg2 = {payload: flow.get('ws2.bat_lvl')};\n\nreturn [msg1,msg2];",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 1980,
+        "wires": [
+            [
+                "d6f85d18d6c6bd55"
+            ],
+            [
+                "7cbd4c841713e00c"
+            ]
+        ]
+    },
+    {
+        "id": "70f151068a36c87d",
+        "type": "link in",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "links": [
+            "b49cc4ea.74d988",
+            "1841ce4cc35723e5",
+            "5a7db02173f3b6f9"
+        ],
+        "x": 345,
+        "y": 1460,
+        "wires": [
+            [
+                "17cadf9e68628c49"
+            ]
+        ]
+    },
+    {
+        "id": "37655ffcb46e9252",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "identify item code",
+        "func": "msg.method = \"GET\";\n\nmsg.headers = {\n    \"Authorization\": \"token \"+global.get('erpnext_api_key')+\":\"+global.get('erpnext_api_secret'),\n    \"Accept\": \"application/json\",\n    \"Content-Type\": \"application/json\"\n}\nitem_name = msg.payload.Item\nmass = msg.payload.Weight;\nqty = msg.payload.Qty;\nbattery_lvl = msg.payload.Battery;\nlocation = \"Location 1\";\nmpi = mass/qty;\nvar numberofpackages = msg.payload.numberofpackages;\nmsg.payload.numberofpackages = numberofpackages;\n/*context.set(\"numberofpackages\",numberofpackages);*/\n\n// case statements to get the location and workstation\n/*switch (msg.payload.TagID)\n{\n    case 441:\n        workstation = \"Workstation 1\";\n        break;\n    case 300:\n        workstation = \"Workstation 2\";\n        break;\n    case 661:\n        workstation = \"Workstation 3\";\n    break;\n    default:\n        workstation = \"No allocation\";\n        break;\n}*/\n// case statements to get the location and workstation\nswitch (msg.payload.Device)\n{\n    case \"gdWS1\":\n        workstation = \"Workstation 1\";\n        break;\n    case \"gdWS2\":\n        workstation = \"Workstation 2\";\n        break;\n    case \"gdWS3\":\n        workstation = \"Workstation 3\";\n        break;\n    default:\n        workstation = \"No allocation\";\n        break;\n}\n\nif (mass >= 1000)\n    {\n        numberofpackages = 10;\n    }else if (mass >= 900){\n        numberofpackages = 9;\n    }else if (mass >= 800){\n        numberofpackages = 8;\n    }else if (mass >= 700){\n        numberofpackages = 7;\n    }else if (mass >= 600){\n        numberofpackages = 6;\n    }else if (mass >= 500){\n        numberofpackages = 5;\n    }else if (mass >= 400){\n        numberofpackages = 4;\n    }else if (mass >= 300){\n        numberofpackages = 3;\n    }else if (mass >= 200){\n        numberofpackages = 2;\n    }else {\n        numberofpackages = 1;\n    }\n\n// need to chg based on the topic from mqtt\nswitch (msg.topic)\n{\n    case \"gdWS1/main\":\n        item_code = \"A01\";\n        break;\n    case \"gdWS2/main\":\n        item_code = \"A02\";\n        break;\n}\n\nflow.set(\"scale2.name\", item_name);\nflow.set(\"scale2.item\", item_code);\nflow.set(\"scale2.mass\", mass);\nflow.set(\"scale2.qty\", qty);\nflow.set(\"scale2.bat_lvl\", battery_lvl);\nflow.set(\"scale2.loc\", location);\nflow.set(\"scale2.ws\", workstation);\nflow.set(\"scale2.mpi\",mpi);\nflow.set(\"scale2.numberofpackages\", numberofpackages);\n\nwebsite = global.get(\"domain\");\nmsg.url = website + \"/api/resource/Item/\" + item_code;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2050,
+        "y": 300,
+        "wires": [
+            [
+                "9e0feb2197c281e2",
+                "295fc72f396fcca4"
+            ]
+        ]
+    },
+    {
+        "id": "9e0feb2197c281e2",
+        "type": "http request",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 2030,
+        "y": 360,
+        "wires": [
+            [
+                "cf75120d5dd3148d"
+            ]
+        ]
+    },
+    {
+        "id": "cf75120d5dd3148d",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "check conflict",
+        "func": "esp_loc = flow.get(\"scale2.loc\");\nesp_ws = flow.get(\"scale2.ws\");\nesp_mass = flow.get(\"scale2.mass\");\nesp_qty = flow.get(\"scale2.qty\");\n\nerp_loc = msg.payload.data.item_defaults[0].default_warehouse.slice(0,10);\nerp_ws = msg.payload.data.description;\n\nflow.set(\"scale2.name\", msg.payload.data.item_name);\nflow.set(\"scale2.conversion\", msg.payload.data.weight_per_unit);\nflow.set(\"scale2.threshold\", msg.payload.data.reorder_levels[0].warehouse_reorder_level);\nflow.set(\"scale2.reorder_qty\", msg.payload.data.reorder_levels[0].warehouse_reorder_qty);\n\nmsg1 = {payload: 0}; \nmsg2 = {payload: 0}; \nmsg3 = {payload: 1};\n\nif (esp_loc != erp_loc)\n{\n    // Change default warehouse\n    // Change reorder warehouse\n    // Move the stock into the new warehouse\n        // (zero the stock in current warehouse, update the qty in new warehouse)\n    msg1 = {payload: 1};\n    msg3 = {payload: 0};\n    msg.delay = 0;\n    flow.set(\"scale2.locPrev\",erp_loc);\n}\n\nif (esp_ws != erp_ws)\n{\n    // Check if thr is any item in the new workstation\n    // If no,\n        // Change text in description (workstation)\n        // Change stock qty\n    // If yes,\n        // Change text in description (workstation)\n        // Change stock qty\n        // Change text in description for the clash item to \"No allocation\"\n    msg2 = {payload: 1};\n    msg3 = {payload: 0};\n    msg.delay = 1;\n}\n\n\nreturn [msg1, msg2, msg3];",
+        "outputs": 3,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 2280,
+        "y": 360,
+        "wires": [
+            [
+                "4d467bd88667160a",
+                "57a6b692ef972f98"
+            ],
+            [
+                "0fa61594a0f6c79c"
+            ],
+            [
+                "3660a46b4d9c9364"
+            ]
+        ]
+    },
+    {
+        "id": "ecfbf49bbc32e22f",
+        "type": "http request",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 2680,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3660a46b4d9c9364",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "chg stock qty",
+        "func": "if (msg.payload == 1)\n{\n    msg.method = \"POST\";\n\n    msg.headers = {\n        \"Authorization\": \"token \"+global.get('erpnext_api_key')+\":\"+global.get('erpnext_api_secret'),\n        \"Accept\": \"application/json\",\n        \"Content-Type\": \"application/json\"\n    }\n    \n    website = global.get(\"domain\");\n    msg.url = website + \"/api/resource/Stock%20Reconciliation\"\n    \n    item_code = flow.get(\"scale2.item\");\n    location = flow.get(\"scale2.loc\") + \" - SHRDC\";\n    qty = flow.get(\"scale2.qty\");\n    \n    msg.payload = \n    {\n        \"data\": {\n            \"purpose\": \"Stock Reconciliation\",\n            \"docstatus\": 1,\n            \"items\": [\n                {\n                    \"item_code\": item_code,\n                    \"warehouse\": location,\n                    \"qty\": qty,\n                    \"valuation_rate\": 5\n                }\n            ]\n        }\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2500,
+        "y": 420,
+        "wires": [
+            [
+                "ecfbf49bbc32e22f"
+            ]
+        ]
+    },
+    {
+        "id": "b49d4f40b603c77d",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "location (warehouse) conflict",
+        "func": "if (msg.payload == 1)\n{\n    msg.method = \"PUT\";\n\n    msg.headers = {\n        \"Authorization\": \"token \"+global.get('erpnext_api_key')+\":\"+global.get('erpnext_api_secret'),\n        \"Accept\": \"application/json\",\n        \"Content-Type\": \"application/json\"\n    }\n    \n    item_code = flow.get(\"scale2.item\");\n    website = global.get(\"domain\");\n    msg.url = website + \"/api/resource/Item/\" + item_code;\n    \n    new_loc = flow.get(\"scale2.loc\") + \" - SHRDC\";\n    \n    msg.payload = {\n        \"data\":\n        {\n            \"reorder_levels\":\n            [\n                {\n                    \"warehouse\": new_loc,\n                    \"warehouse_reorder_level\": flow.get(\"scale2.threshold\"),\n                    \"warehouse_reorder_qty\": flow.get(\"scale2.reorder_qty\"),\n                    \"material_request_type\": \"Purchase\"\n                }\n            ],\n            \"item_defaults\":\n            [\n                {\n                    \"company\": \"Selangor Human Resource Development Centre\",\n                    \"default_warehouse\": new_loc\n                }\n            ]\n        }\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 2690,
+        "y": 300,
+        "wires": [
+            [
+                "b710669fb612c2b4"
+            ]
+        ]
+    },
+    {
+        "id": "b710669fb612c2b4",
+        "type": "http request",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 2920,
+        "y": 300,
+        "wires": [
+            [
+                "bb99130c1e7c95a8"
+            ]
+        ]
+    },
+    {
+        "id": "f07d0af39051a995",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "chg workstation (curr item)",
+        "func": "item_code = msg.payload.data.name\n\nif (item_code != flow.get(\"scale2.item\"))\n{\n    // there is conflict occurred\n    // next http request is to chg current workstation\n    msg.method = \"PUT\";\n\n    msg.headers = {\n        \"Authorization\": \"token \"+global.get('erpnext_api_key')+\":\"+global.get('erpnext_api_secret'),\n        \"Accept\": \"application/json\",\n        \"Content-Type\": \"application/json\"\n    }\n    \n    website = global.get(\"domain\");\n    item_code = flow.get(\"scale2.item\");\n    msg.url = website + \"/api/resource/Item/\" + item_code;\n    \n    workstation = flow.get(\"scale2.ws\");\n    \n    msg.payload = {\n        \"data\":\n        {\n            \"description\": workstation\n        }\n    }\n}\nelse\n{\n    // no conflict occurr\n    // next http request is to chg stock qty\n    \n    msg.method = \"POST\";\n\n    msg.headers = {\n        \"Authorization\": \"token \"+global.get('erpnext_api_key')+\":\"+global.get('erpnext_api_secret'),\n        \"Accept\": \"application/json\",\n        \"Content-Type\": \"application/json\"\n    }\n    \n    website = global.get(\"domain\");\n    msg.url = website + \"/api/resource/Stock%20Reconciliation\"\n\n    item_code = flow.get(\"scale2.item\");\n    location = flow.get(\"scale2.loc\") + \" - SHRDC\";\n    qty = flow.get(\"scale2.qty\");\n    \n    msg.payload = \n    {\n        \"data\": {\n            \"purpose\": \"Stock Reconciliation\",\n            \"docstatus\": 1,\n            \"items\": [\n                {\n                    \"item_code\": item_code,\n                    \"warehouse\": location,\n                    \"qty\": qty\n                }\n            ]\n        }\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 3110,
+        "y": 420,
+        "wires": [
+            [
+                "55620d6119ed20c4"
+            ]
+        ]
+    },
+    {
+        "id": "55620d6119ed20c4",
+        "type": "http request",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 3340,
+        "y": 420,
+        "wires": [
+            [
+                "3d277c8288be2336"
+            ]
+        ]
+    },
+    {
+        "id": "0fa61594a0f6c79c",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "workstation conflict",
+        "func": "//Request for the general info of every item available\n//To check for conflicting workstation\n\nif (msg.payload == 1)\n{\n    msg.method = \"GET\";\n\n    msg.headers = {\n        \"Authorization\": \"token \"+global.get('erpnext_api_key')+\":\"+global.get('erpnext_api_secret'),\n        \"Accept\": \"application/json\",\n        \"Content-Type\": \"application/json\"\n    }\n    \n    website = global.get(\"domain\");\n    msg.url = website + \"/api/method/erpnext.stock.report.stock_projected_qty.stock_projected_qty.get_all_stock_current_balance\"\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 2520,
+        "y": 360,
+        "wires": [
+            [
+                "e5d9fdf507ab4fe3"
+            ]
+        ]
+    },
+    {
+        "id": "e5d9fdf507ab4fe3",
+        "type": "http request",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 2700,
+        "y": 360,
+        "wires": [
+            [
+                "db63f978354c957c"
+            ]
+        ]
+    },
+    {
+        "id": "db63f978354c957c",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "chg workstation (conflict item)",
+        "func": "//Identify conflicting item (if any)\nlet i = 0; k = 0;\nlet temp_code = [];\nlet temp_name = [];\nlet temp_qty = [];\nlet temp_ws = [];\nlet temp_loc = [];\nlet item_num = msg.payload.message[0].length;\n\n//Convert the obj into array\nfor (let i = 0; i < item_num; i++)\n{\n    temp_name[i] = msg.payload.message[0][i].item_name;\n    temp_ws[i] = msg.payload.message[0][i].description;\n    if (msg.payload.message[1][i].actual_qty == 0)\n    {\n        k++;\n    }\n    temp_code[i] = msg.payload.message[1][i+k].item_code;\n    temp_loc[i] = msg.payload.message[1][i+k].warehouse.slice(0,10);\n    temp_qty[i] = msg.payload.message[1][i+k].actual_qty;\n}\n\n//Compare the workstation\nlocation = flow.get(\"scale2.loc\");\nworkstation = flow.get(\"scale2.ws\");\n\nconflict_item = flow.get(\"scale2.item\");\n\nfor (let j = 0; j < item_num; j++)\n{\n    if ((location == temp_loc[j]) && (workstation == temp_ws[j]))\n    {\n        conflict_item = temp_code[j];\n        break;\n    }\n}\n\n//Send HTTP request to change workstation of conflicting item\n//Or change the workstation of current item\nmsg.method = \"PUT\";\n\nmsg.headers = {\n    \"Authorization\": \"token \"+global.get('erpnext_api_key')+\":\"+global.get('erpnext_api_secret'),\n    \"Accept\": \"application/json\",\n    \"Content-Type\": \"application/json\"\n}\n\nwebsite = global.get(\"domain\");\nmsg.url = website + \"/api/resource/Item/\" + conflict_item;\n\nif (conflict_item == flow.get(\"scale2.item\"))\n{\n    msg.payload = {\n        \"data\":\n        {\n            \"description\": workstation\n        }\n    }\n}\nelse\n{\n    msg.payload = {\n        \"data\":\n        {\n            \"description\": \"No allocation\"\n        }\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 2920,
+        "y": 360,
+        "wires": [
+            [
+                "b0d5d610cc203794"
+            ]
+        ]
+    },
+    {
+        "id": "b0d5d610cc203794",
+        "type": "http request",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 3160,
+        "y": 360,
+        "wires": [
+            [
+                "f07d0af39051a995"
+            ]
+        ]
+    },
+    {
+        "id": "535d7cfaecb4cfef",
+        "type": "http request",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 2780,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f50e6252dfe4b3a3",
+        "type": "http request",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 3400,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "bb99130c1e7c95a8",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "chg stock qty (curr warehouse)",
+        "func": "msg.method = \"POST\";\n\nmsg.headers = {\n    \"Authorization\": \"token \"+global.get('erpnext_api_key')+\":\"+global.get('erpnext_api_secret'),\n    \"Accept\": \"application/json\",\n    \"Content-Type\": \"application/json\"\n}\n\nwebsite = global.get(\"domain\");\nmsg.url = website + \"/api/resource/Stock%20Reconciliation\"\n\nitem_code = flow.get(\"scale2.item\");\nlocation = flow.get(\"scale2.loc\") + \" - GD2\";\nqty = flow.get(\"scale2.qty\");\n\nmsg.payload = \n{\n    \"data\": {\n        \"purpose\": \"Stock Reconciliation\",\n        \"docstatus\": 1,\n        \"items\": [\n            {\n                \"item_code\": item_code,\n                \"warehouse\": location,\n                \"qty\": qty,\n                \"valuation_rate\": 5\n            }\n        ]\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 3160,
+        "y": 300,
+        "wires": [
+            [
+                "f50e6252dfe4b3a3"
+            ]
+        ]
+    },
+    {
+        "id": "4d467bd88667160a",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "chg stock qty (prev warehouse)",
+        "func": "if (msg.payload == 1)\n{\n    //HTTP request to zero the qty in prev warehouse\n    msg.method = \"POST\";\n\n    msg.headers = {\n        \"Authorization\": \"token \"+global.get('erpnext_api_key')+\":\"+global.get('erpnext_api_secret'),\n        \"Accept\": \"application/json\",\n        \"Content-Type\": \"application/json\"\n    }\n    \n    website = global.get(\"domain\");\n    msg.url = website + \"/api/resource/Stock%20Reconciliation\"\n    \n    item_code = flow.get(\"scale2.item\");\n    erp_loc = flow.get(\"scale2.locPrev\") + \" - SHRDC\";\n    \n    msg.payload = \n    {\n        \"data\": {\n            \"purpose\": \"Stock Reconciliation\",\n            \"docstatus\": 1,\n            \"items\": [\n                {\n                    \"item_code\": item_code,\n                    \"warehouse\": erp_loc,\n                    \"qty\": 0\n                }\n            ]\n        }\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 2540,
+        "y": 260,
+        "wires": [
+            [
+                "535d7cfaecb4cfef"
+            ]
+        ]
+    },
+    {
+        "id": "7bd2122358d3c9ed",
+        "type": "http request",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 3340,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3d277c8288be2336",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "chg stock qty",
+        "func": "if (msg.payload.data.doctype == \"Item\")\n{\n    msg.method = \"POST\";\n    \n    msg.headers = {\n        \"Authorization\": \"token \"+global.get('erpnext_api_key')+\":\"+global.get('erpnext_api_secret'),\n        \"Accept\": \"application/json\",\n        \"Content-Type\": \"application/json\"\n    }\n    \n    website = global.get(\"domain\");\n    msg.url = website + \"/api/resource/Stock%20Reconciliation\"\n    \n    item_code = flow.get(\"scale2.item\");\n    location = flow.get(\"scale2.loc\") + \" - SHRDC\";\n    qty = flow.get(\"scale1.qty\");\n    \n    msg.payload = \n    {\n        \"data\": {\n            \"purpose\": \"Stock Reconciliation\",\n            \"docstatus\": 1,\n            \"items\": [\n                {\n                    \"item_code\": item_code,\n                    \"warehouse\": location,\n                    \"qty\": qty\n                }\n            ]\n        }\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 3160,
+        "y": 480,
+        "wires": [
+            [
+                "7bd2122358d3c9ed"
+            ]
+        ]
+    },
+    {
+        "id": "57a6b692ef972f98",
+        "type": "delay",
+        "z": "0c07bffa7abc86ef",
+        "name": "delay",
+        "pauseType": "delayv",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "outputs": 1,
+        "x": 2480,
+        "y": 300,
+        "wires": [
+            [
+                "b49d4f40b603c77d"
+            ]
+        ]
+    },
+    {
+        "id": "eb21580e04e88206",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "process the incoming obj data and chg its loc/ws accrodingly",
+        "info": "also chg the stock qty",
+        "x": 2570,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "295fc72f396fcca4",
+        "type": "change",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "scale2.qty",
+                "tot": "flow"
+            },
+            {
+                "t": "set",
+                "p": "measurement",
+                "pt": "msg",
+                "to": "topic",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 2330,
+        "y": 540,
+        "wires": [
+            [
+                "0abc9e3b87bbdd4f"
+            ]
+        ]
+    },
+    {
+        "id": "753e8fa4ea4011c5",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "store latest stock qty into influxdb",
+        "info": "",
+        "x": 2520,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "40fae4785fa38b75",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "Receives data (Scale 2)",
+        "info": "",
+        "x": 2010,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "0abc9e3b87bbdd4f",
+        "type": "influxdb out",
+        "z": "0c07bffa7abc86ef",
+        "influxdb": "211f2988135446d7",
+        "name": "import data",
+        "measurement": "",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "bucket",
+        "x": 2540,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "5a7db02173f3b6f9",
+        "type": "link out",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "links": [
+            "70f151068a36c87d"
+        ],
+        "x": 2165,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "7fc459f4f6712cb4",
+        "type": "mqtt in",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "topic": "gdWS2/main",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "f5e8fa7a.9b57e8",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 2020,
+        "y": 220,
+        "wires": [
+            [
+                "37655ffcb46e9252",
+                "5a7db02173f3b6f9",
+                "c91e23a3c637f01c"
+            ]
+        ]
+    },
+    {
+        "id": "dc32e64352666919",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "func": "msg.method = \"GET\";\n\nmsg.headers = {\n    \"Authorization\": \"token \"+global.get('erpnext_api_key')+\":\"+global.get('erpnext_api_secret'),\n    \"Accept\": \"application/json\",\n    \"Content-Type\": \"application/json\"\n}\n\n//case statement to determine from which flow should get the item code\nswitch(msg.topic)\n{\n    case \"scale2\":\n        item_code = \"A02\";\n        break;\n}\n\nwebsite = global.get(\"domain\");\nmsg.url = website + \"/api/resource/Item/\" + item_code;\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2180,
+        "y": 740,
+        "wires": [
+            [
+                "89e367564b39fc4f"
+            ]
+        ]
+    },
+    {
+        "id": "c30ce71c053d94b1",
+        "type": "inject",
+        "z": "0c07bffa7abc86ef",
+        "name": "send to esp32",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "20",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "6",
+        "topic": "scale2",
+        "payload": "",
+        "payloadType": "date",
+        "x": 2020,
+        "y": 740,
+        "wires": [
+            [
+                "dc32e64352666919"
+            ]
+        ]
+    },
+    {
+        "id": "89e367564b39fc4f",
+        "type": "http request",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 2350,
+        "y": 740,
+        "wires": [
+            [
+                "11462453c5ce903c"
+            ]
+        ]
+    },
+    {
+        "id": "11462453c5ce903c",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "func": "// case statement to determine the locTag & info\n\nmsg.payload = \n{\n    \"Item\": msg.payload.data.item_name,\n    \"Info\": \"A02\",\n    \"locTag\": msg.payload.data.item_defaults[0].default_warehouse.slice(0,10),\n    \"Station\": msg.payload.data.description,\n    \"Conversion\": msg.payload.data.weight_per_unit,\n    \"Threshold\": msg.payload.data.reorder_levels[0].warehouse_reorder_level,\n    \"PollRate\": 5,\n    \"SleepFlag\": flow.get(\"scale2.SleepFlag\"),\n    \"SleepCounter\": flow.get(\"scale2.SleepCounter\")\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2540,
+        "y": 740,
+        "wires": [
+            [
+                "8367939c72e606ab",
+                "34cb1d0ac89a87a2"
+            ]
+        ]
+    },
+    {
+        "id": "b7a7e6c383d21249",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "send out to esp32 (mqtt)",
+        "info": "{\n    \"Item\": \"Hex Bolts\",\n    \"Info\": \"M4x2mm\",\n    \"locTag\": \"abcdef\",\n    \"Station\": \"A1\",\n    \"Conversion\": 3.3,\n    \"Threshold\": 10,\n    \"PollRate\": 5\n}",
+        "x": 2770,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "c399d4f4699a6383",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "Send out data (Scale 2)",
+        "info": "",
+        "x": 2050,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "8367939c72e606ab",
+        "type": "mqtt out",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "topic": "gdWS2/output",
+        "qos": "",
+        "retain": "",
+        "broker": "f5e8fa7a.9b57e8",
+        "x": 2740,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "c91e23a3c637f01c",
+        "type": "debug",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2230,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "4b7bf8d942af6222",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "Receives data",
+        "info": "",
+        "x": 630,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "8afef6ef29cf0098",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "identify item code",
+        "func": "msg.method = \"GET\";\n\nmsg.headers = {\n    \"Authorization\": \"token \"+global.get('erpnext_api_key')+\":\"+global.get('erpnext_api_secret'),\n    \"Accept\": \"application/json\",\n    \"Content-Type\": \"application/json\"\n}\nitem_name = msg.payload.Item\nmass = msg.payload.Weight;\nqty = msg.payload.Qty;\nbattery_lvl = msg.payload.Battery;\nlocation = \"Location 1\";\nmpi = mass/qty;\nvar numberofpackages = msg.payload.numberofpackages;\nmsg.payload.numberofpackages = numberofpackages;\n/*context.set(\"numberofpackages\",numberofpackages);*/\n\n// case statements to get the location and workstation\n/*switch (msg.payload.TagID)\n{\n    case 441:\n        workstation = \"Workstation 1\";\n        break;\n    case 300:\n        workstation = \"Workstation 2\";\n        break;\n    case 661:\n        workstation = \"Workstation 3\";\n    break;\n    default:\n        workstation = \"No allocation\";\n        break;\n}\n*/\n\nswitch (msg.payload.Device)\n{\n    case \"gdWS1\":\n        workstation = \"Workstation 1\";\n        break;\n    case \"gdWS2\":\n        workstation = \"Workstation 2\";\n        break;\n    case \"gdWS3\":\n        workstation = \"Workstation 3\";\n        break;\n    default:\n        workstation = \"No allocation\";\n        break;\n}\n\nif (mass >= 1000)\n    {\n        numberofpackages = 10;\n    }else if (mass >= 900){\n        numberofpackages = 9;\n    }else if (mass >= 800){\n        numberofpackages = 8;\n    }else if (mass >= 700){\n        numberofpackages = 7;\n    }else if (mass >= 600){\n        numberofpackages = 6;\n    }else if (mass >= 500){\n        numberofpackages = 5;\n    }else if (mass >= 400){\n        numberofpackages = 4;\n    }else if (mass >= 300){\n        numberofpackages = 3;\n    }else if (mass >= 200){\n        numberofpackages = 2;\n    }else {\n        numberofpackages = 1;\n    }\n\n// need to chg based on the topic from mqtt\nswitch (msg.topic)\n{\n    case \"gdWS1/main\":\n        item_code = \"A01\";\n        break;\n    case \"gdWS2/main\":\n        item_code = \"A02\";\n        break;\n}\n\nflow.set(\"scale1.item\", item_name);\nflow.set(\"scale1.item\", item_code);\nflow.set(\"scale1.mass\", mass);\nflow.set(\"scale1.qty\", qty);\nflow.set(\"scale1.bat_lvl\", battery_lvl);\nflow.set(\"scale1.loc\", location);\nflow.set(\"scale1.ws\", workstation);\nflow.set(\"scale1.mpi\",mpi);\nflow.set(\"scale1.numberofpackages\", numberofpackages);\n\nwebsite = global.get(\"domain\");\nmsg.url = website + \"/api/resource/Item/\" + item_code;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 360,
+        "wires": [
+            [
+                "b5ab556631cca993",
+                "18883103514c0f25"
+            ]
+        ]
+    },
+    {
+        "id": "b5ab556631cca993",
+        "type": "http request",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 270,
+        "y": 420,
+        "wires": [
+            [
+                "71d4881eb4549bca"
+            ]
+        ]
+    },
+    {
+        "id": "71d4881eb4549bca",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "check conflict",
+        "func": "esp_loc = flow.get(\"scale1.loc\");\nesp_ws = flow.get(\"scale1.ws\");\nesp_mass = flow.get(\"scale1.mass\");\nesp_qty = flow.get(\"scale1.qty\");\n\nerp_loc = msg.payload.data.item_defaults[0].default_warehouse.slice(0,10);\nerp_ws = msg.payload.data.description;\n\nflow.set(\"scale1.name\", msg.payload.data.item_name);\nflow.set(\"scale1.conversion\", msg.payload.data.weight_per_unit);\nflow.set(\"scale1.threshold\", msg.payload.data.reorder_levels[0].warehouse_reorder_level);\nflow.set(\"scale1.reorder_qty\", msg.payload.data.reorder_levels[0].warehouse_reorder_qty);\n\nmsg1 = {payload: 0}; \nmsg2 = {payload: 0}; \nmsg3 = {payload: 1};\n\nif (esp_loc != erp_loc)\n{\n    // Change default warehouse\n    // Change reorder warehouse\n    // Move the stock into the new warehouse\n        // (zero the stock in current warehouse, update the qty in new warehouse)\n    msg1 = {payload: 1};\n    msg3 = {payload: 0};\n    msg.delay = 0;\n    flow.set(\"scale1.locPrev\",erp_loc);\n}\n\nif (esp_ws != erp_ws)\n{\n    // Check if thr is any item in the new workstation\n    // If no,\n        // Change text in description (workstation)\n        // Change stock qty\n    // If yes,\n        // Change text in description (workstation)\n        // Change stock qty\n        // Change text in description for the clash item to \"No allocation\"\n    msg2 = {payload: 1};\n    msg3 = {payload: 0};\n    msg.delay = 1;\n}\n\nreturn [msg1, msg2, msg3];",
+        "outputs": 3,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 420,
+        "wires": [
+            [
+                "1607cc3334f4b1c5",
+                "462779dc43f0fc17"
+            ],
+            [
+                "7a15b9d577e9894c"
+            ],
+            [
+                "3fec4de24e7b0ac0"
+            ]
+        ]
+    },
+    {
+        "id": "a8326007a0205609",
+        "type": "http request",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 920,
+        "y": 480,
+        "wires": [
+            [
+                "b910bff1b3fff28c"
+            ]
+        ]
+    },
+    {
+        "id": "3fec4de24e7b0ac0",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "chg stock qty",
+        "func": "if (msg.payload == 1)\n{\n    msg.method = \"POST\";\n\n    msg.headers = {\n        \"Authorization\": \"token \"+global.get('erpnext_api_key')+\":\"+global.get('erpnext_api_secret'),\n        \"Accept\": \"application/json\",\n        \"Content-Type\": \"application/json\"\n    }\n    \n    website = global.get(\"domain\");\n    msg.url = website + \"/api/resource/Stock%20Reconciliation\"\n    \n    item_code = flow.get(\"scale1.item\");\n    location = flow.get(\"scale1.loc\") + \" - SHRDC\";\n    qty = flow.get(\"scale1.qty\");\n    \n    msg.payload = \n    {\n        \"data\": {\n            \"purpose\": \"Stock Reconciliation\",\n            \"docstatus\": 1,\n            \"items\": [\n                {\n                    \"item_code\": item_code,\n                    \"warehouse\": location,\n                    \"qty\": qty,\n                    \"valuation_rate\": 5\n                }\n            ]\n        }\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 480,
+        "wires": [
+            [
+                "a8326007a0205609",
+                "b910bff1b3fff28c"
+            ]
+        ]
+    },
+    {
+        "id": "15009cb2ece923dc",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "location (warehouse) conflict",
+        "func": "if (msg.payload == 1)\n{\n    msg.method = \"PUT\";\n\n    msg.headers = {\n        \"Authorization\": \"token \"+global.get('erpnext_api_key')+\":\"+global.get('erpnext_api_secret'),\n        \"Accept\": \"application/json\",\n        \"Content-Type\": \"application/json\"\n    }\n    \n    website = global.get(\"domain\");\n    item_code = flow.get(\"scale1.item\");\n    msg.url = website + \"/api/resource/Item/\" + item_code;\n    \n    new_loc = flow.get(\"scale1.loc\") + \" - SHRDC\";\n    \n    msg.payload = {\n        \"data\":\n        {\n            \"reorder_levels\":\n            [\n                {\n                    \"warehouse\": new_loc,\n                    \"warehouse_reorder_level\": flow.get(\"scale1.threshold\"),\n                    \"warehouse_reorder_qty\": flow.get(\"scale1.reorder_qty\"),\n                    \"material_request_type\": \"Purchase\"\n                }\n            ],\n            \"item_defaults\":\n            [\n                {\n                    \"company\": \"Selangor Human Resource Development Centre\",\n                    \"default_warehouse\": new_loc\n                }\n            ]\n        }\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 930,
+        "y": 360,
+        "wires": [
+            [
+                "f7a92db10843684a"
+            ]
+        ]
+    },
+    {
+        "id": "f7a92db10843684a",
+        "type": "http request",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 1160,
+        "y": 360,
+        "wires": [
+            [
+                "6444e6836a692afc"
+            ]
+        ]
+    },
+    {
+        "id": "373cee6b6dab1272",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "chg workstation (curr item)",
+        "func": "item_code = msg.payload.data.name\n\nif (item_code != flow.get(\"scale1.item\"))\n{\n    // there is conflict occurred\n    // next http request is to chg current workstation\n    msg.method = \"PUT\";\n\n    msg.headers = {\n        \"Authorization\": \"token \"+global.get('erpnext_api_key')+\":\"+global.get('erpnext_api_secret'),\n        \"Accept\": \"application/json\",\n        \"Content-Type\": \"application/json\"\n    }\n    \n    website = global.get(\"domain\");\n    item_code = flow.get(\"scale1.item\");\n    msg.url = website + \"/api/resource/Item/\" + item_code;\n    \n    workstation = flow.get(\"scale1.ws\");\n    \n    msg.payload = {\n        \"data\":\n        {\n            \"description\": workstation\n        }\n    }\n}\nelse\n{\n    // no conflict occurr\n    // next http request is to chg stock qty\n    \n    msg.method = \"POST\";\n\n    msg.headers = {\n        \"Authorization\": \"token \"+global.get('erpnext_api_key')+\":\"+global.get('erpnext_api_secret'),\n        \"Accept\": \"application/json\",\n        \"Content-Type\": \"application/json\"\n    }\n    \n    website = global.get(\"domain\");\n    msg.url = website + \"/api/resource/Stock%20Reconciliation\"\n\n    item_code = flow.get(\"scale1.item\");\n    location = flow.get(\"scale1.loc\") + \" - SHRDC\";\n    qty = flow.get(\"scale1.qty\");\n    \n    msg.payload = \n    {\n        \"data\": {\n            \"purpose\": \"Stock Reconciliation\",\n            \"docstatus\": 1,\n            \"items\": [\n                {\n                    \"item_code\": item_code,\n                    \"warehouse\": location,\n                    \"qty\": qty\n                }\n            ]\n        }\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1350,
+        "y": 480,
+        "wires": [
+            [
+                "f5deb97751830932"
+            ]
+        ]
+    },
+    {
+        "id": "f5deb97751830932",
+        "type": "http request",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 1580,
+        "y": 480,
+        "wires": [
+            [
+                "eac3eea4cdee3c03"
+            ]
+        ]
+    },
+    {
+        "id": "7a15b9d577e9894c",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "workstation conflict",
+        "func": "//Request for the general info of every item available\n//To check for conflicting workstation\n\nif (msg.payload == 1)\n{\n    msg.method = \"GET\";\n\n    msg.headers = {\n        \"Authorization\": \"token \"+global.get('erpnext_api_key')+\":\"+global.get('erpnext_api_secret'),\n        \"Accept\": \"application/json\",\n        \"Content-Type\": \"application/json\"\n    }\n    \n    website = global.get(\"domain\");\n    msg.url = website + \"/api/method/erpnext.stock.report.stock_projected_qty.stock_projected_qty.get_all_stock_current_balance\"\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 760,
+        "y": 420,
+        "wires": [
+            [
+                "b5c3491d9cb200cb"
+            ]
+        ]
+    },
+    {
+        "id": "b5c3491d9cb200cb",
+        "type": "http request",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 940,
+        "y": 420,
+        "wires": [
+            [
+                "3e0fc721ee7c123c"
+            ]
+        ]
+    },
+    {
+        "id": "3e0fc721ee7c123c",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "chg workstation (conflict item)",
+        "func": "//Identify conflicting item (if any)\nlet i = 0; k = 0;\nlet temp_code = [];\nlet temp_name = [];\nlet temp_qty = [];\nlet temp_ws = [];\nlet temp_loc = [];\nlet item_num = msg.payload.message[0].length;\n\n//Convert the obj into array\nfor (let i = 0; i < item_num; i++)\n{\n    temp_name[i] = msg.payload.message[0][i].item_name;\n    temp_ws[i] = msg.payload.message[0][i].description;\n    while (msg.payload.message[1][i+k].actual_qty == 0)\n    {\n        k++;\n    }\n    temp_code[i] = msg.payload.message[1][i+k].item_code;\n    temp_loc[i] = msg.payload.message[1][i+k].warehouse.slice(0,10);\n    temp_qty[i] = msg.payload.message[1][i+k].actual_qty;\n}\n\n//Compare the workstation\nlocation = flow.get(\"scale1.loc\");\nworkstation = flow.get(\"scale1.ws\");\n\nconflict_item = flow.get(\"scale1.item\");\n\nfor (let j = 0; j < item_num; j++)\n{\n    if ((location == temp_loc[j]) && (workstation == temp_ws[j]))\n    {\n        conflict_item = temp_code[j];\n        break;\n    }\n}\n\n//Send HTTP request to change workstation of conflicting item\n//Or change the workstation of current item\nmsg.method = \"PUT\";\n\nmsg.headers = {\n    \"Authorization\": \"token \"+global.get('erpnext_api_key')+\":\"+global.get('erpnext_api_secret'),\n    \"Accept\": \"application/json\",\n    \"Content-Type\": \"application/json\"\n}\n\nwebsite = global.get(\"domain\");\nmsg.url = website + \"/api/resource/Item/\" + conflict_item;\n\nif (conflict_item == flow.get(\"scale1.item\"))\n{\n    msg.payload = {\n        \"data\":\n        {\n            \"description\": workstation\n        }\n    }\n}\nelse\n{\n    msg.payload = {\n        \"data\":\n        {\n            \"description\": \"No allocation\"\n        }\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1160,
+        "y": 420,
+        "wires": [
+            [
+                "74ebaab00ce309a0"
+            ]
+        ]
+    },
+    {
+        "id": "74ebaab00ce309a0",
+        "type": "http request",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 1400,
+        "y": 420,
+        "wires": [
+            [
+                "373cee6b6dab1272"
+            ]
+        ]
+    },
+    {
+        "id": "5e3e37c2d8d1fd2c",
+        "type": "http request",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 1020,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "219a7b035fcaaf24",
+        "type": "http request",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 1640,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6444e6836a692afc",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "chg stock qty (curr warehouse)",
+        "func": "msg.method = \"POST\";\n\nmsg.headers = {\n    \"Authorization\": \"token \"+global.get('erpnext_api_key')+\":\"+global.get('erpnext_api_secret'),\n    \"Accept\": \"application/json\",\n    \"Content-Type\": \"application/json\"\n}\n\nwebsite = global.get(\"domain\");\nmsg.url = website + \"/api/resource/Stock%20Reconciliation\"\n\nitem_code = flow.get(\"scale1.item\");\nlocation = flow.get(\"scale1.loc\") + \" - SHRDC\";\nqty = flow.get(\"scale1.qty\");\n\nmsg.payload = \n{\n    \"data\": {\n        \"purpose\": \"Stock Reconciliation\",\n        \"docstatus\": 1,\n        \"items\": [\n            {\n                \"item_code\": item_code,\n                \"warehouse\": location,\n                \"qty\": qty,\n                \"valuation_rate\": 5\n            }\n        ]\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1400,
+        "y": 360,
+        "wires": [
+            [
+                "219a7b035fcaaf24"
+            ]
+        ]
+    },
+    {
+        "id": "1607cc3334f4b1c5",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "chg stock qty (prev warehouse)",
+        "func": "if (msg.payload == 1)\n{\n    //HTTP request to zero the qty in prev warehouse\n    msg.method = \"POST\";\n\n    msg.headers = {\n        \"Authorization\": \"token \"+global.get('erpnext_api_key')+\":\"+global.get('erpnext_api_secret'),\n        \"Accept\": \"application/json\",\n        \"Content-Type\": \"application/json\"\n    }\n    \n    website = global.get(\"domain\");\n    msg.url = website + \"/api/resource/Stock%20Reconciliation\"\n    \n    item_code = flow.get(\"scale1.item\");\n    erp_loc = flow.get(\"scale1.locPrev\") + \" - SHRDC\";\n    \n    msg.payload = \n    {\n        \"data\": {\n            \"purpose\": \"Stock Reconciliation\",\n            \"docstatus\": 1,\n            \"items\": [\n                {\n                    \"item_code\": item_code,\n                    \"warehouse\": erp_loc,\n                    \"qty\": 0\n                }\n            ]\n        }\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 780,
+        "y": 320,
+        "wires": [
+            [
+                "5e3e37c2d8d1fd2c"
+            ]
+        ]
+    },
+    {
+        "id": "4029c872259fd954",
+        "type": "http request",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 1580,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "eac3eea4cdee3c03",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "chg stock qty",
+        "func": "if (msg.payload.data.doctype == \"Item\")\n{\n    msg.method = \"POST\";\n    \n    msg.headers = {\n        \"Authorization\": \"token \"+global.get('erpnext_api_key')+\":\"+global.get('erpnext_api_secret'),\n        \"Accept\": \"application/json\",\n        \"Content-Type\": \"application/json\"\n    }\n    \n    website = global.get(\"domain\");\n    msg.url = website + \"/api/resource/Stock%20Reconciliation\"\n    \n    item_code = flow.get(\"scale1.item\");\n    location = flow.get(\"scale1.loc\") + \" - SHRDC\";\n    qty = flow.get(\"scale1.qty\");\n    \n    msg.payload = \n    {\n        \"data\": {\n            \"purpose\": \"Stock Reconciliation\",\n            \"docstatus\": 1,\n            \"items\": [\n                {\n                    \"item_code\": item_code,\n                    \"warehouse\": location,\n                    \"qty\": qty\n                }\n            ]\n        }\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1400,
+        "y": 540,
+        "wires": [
+            [
+                "4029c872259fd954"
+            ]
+        ]
+    },
+    {
+        "id": "462779dc43f0fc17",
+        "type": "delay",
+        "z": "0c07bffa7abc86ef",
+        "name": "delay",
+        "pauseType": "delayv",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "outputs": 1,
+        "x": 720,
+        "y": 360,
+        "wires": [
+            [
+                "15009cb2ece923dc"
+            ]
+        ]
+    },
+    {
+        "id": "8c789961c8014a1f",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "process the incoming obj data and chg its loc/ws accrodingly",
+        "info": "also chg the stock qty",
+        "x": 810,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "18883103514c0f25",
+        "type": "change",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "scale1.qty",
+                "tot": "flow"
+            },
+            {
+                "t": "set",
+                "p": "measurement",
+                "pt": "msg",
+                "to": "topic",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 570,
+        "y": 600,
+        "wires": [
+            [
+                "2c41e0ced022c98d"
+            ]
+        ]
+    },
+    {
+        "id": "1e529126bf4fd9f6",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "store latest stock qty into influxdb",
+        "info": "",
+        "x": 760,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "5c68ec2daef0ae3e",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "func": "msg.method = \"GET\";\n\nmsg.headers = {\n    \"Authorization\": \"token \"+global.get('erpnext_api_key')+\":\"+global.get('erpnext_api_secret'),\n    \"Accept\": \"application/json\",\n    \"Content-Type\": \"application/json\"\n}\n\n//case statement to determine from which flow should get the item code\nswitch(msg.topic)\n{\n    case \"scale1\":\n        item_code = \"A01\";\n        break;\n}\n\nwebsite = global.get(\"domain\");\nmsg.url = website + \"/api/resource/Item/\" + item_code;\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 760,
+        "wires": [
+            [
+                "5c65e08754f13843"
+            ]
+        ]
+    },
+    {
+        "id": "5c65e08754f13843",
+        "type": "http request",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 580,
+        "y": 760,
+        "wires": [
+            [
+                "3aeb76bee2e8b1e8",
+                "c9f6a34cf9007b28"
+            ]
+        ]
+    },
+    {
+        "id": "57ebbda221d904dd",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "send out to esp32 (mqtt)",
+        "info": "{\n    \"Item\": \"Hex Bolts\",\n    \"Info\": \"M4x2mm\",\n    \"locTag\": \"abcdef\",\n    \"Station\": \"A1\",\n    \"Conversion\": 3.3,\n    \"Threshold\": 10,\n    \"PollRate\": 5\n}",
+        "x": 1000,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "4304e4ce1652a4f2",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "Send out data (Scale 1)",
+        "info": "",
+        "x": 280,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "8ba69a09ae5287c2",
+        "type": "mqtt out",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "topic": "gdWS1/output",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "638442ba.8026fc",
+        "x": 970,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "99ba322fe2298928",
+        "type": "mqtt in",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "topic": "gdWS1/main",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "638442ba.8026fc",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 240,
+        "y": 300,
+        "wires": [
+            [
+                "8afef6ef29cf0098",
+                "1841ce4cc35723e5",
+                "a3aea956bfce9735"
+            ]
+        ]
+    },
+    {
+        "id": "1841ce4cc35723e5",
+        "type": "link out",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "links": [
+            "70f151068a36c87d"
+        ],
+        "x": 385,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "1634b6d0807274d5",
+        "type": "inject",
+        "z": "0c07bffa7abc86ef",
+        "name": "send to esp32",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "20",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "scale1",
+        "payload": "",
+        "payloadType": "date",
+        "x": 230,
+        "y": 760,
+        "wires": [
+            [
+                "5c68ec2daef0ae3e"
+            ]
+        ]
+    },
+    {
+        "id": "2c41e0ced022c98d",
+        "type": "influxdb out",
+        "z": "0c07bffa7abc86ef",
+        "influxdb": "d1a70d0d05e11b6f",
+        "name": "import data",
+        "measurement": "",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "bucket",
+        "x": 780,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "a3aea956bfce9735",
+        "type": "debug",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 450,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "3aeb76bee2e8b1e8",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "func": "// case statement to determine the locTag & info\n\nmsg.payload = \n{\n    \"Item\": msg.payload.data.item_name,\n    \"Info\": \"A0l\",\n    \"locTag\": msg.payload.data.item_defaults[0].default_warehouse.slice(0,10),\n    \"Station\": msg.payload.data.description,\n    \"Conversion\": msg.payload.data.weight_per_unit,\n    \"Threshold\": msg.payload.data.reorder_levels[0].warehouse_reorder_level,\n    \"PollRate\": 5,\n    \"SleepFlag\": flow.get(\"scale1.SleepFlag\"),\n    \"SleepCounter\": flow.get(\"scale1.SleepCounter\")\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 760,
+        "wires": [
+            [
+                "8ba69a09ae5287c2",
+                "dc39b8507fe7d93f",
+                "4d6fe37ce13433d7"
+            ]
+        ]
+    },
+    {
+        "id": "4d6fe37ce13433d7",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "func": "let SleepTime, WakeTime, SleepFlag, SleepCounter, display;\n\n// Get the input from user\nif (msg.topic == \"SleepTime\")\n{\n    SleepTime = msg.payload;\n    flow.set(\"SleepTime\", SleepTime);\n    WakeTime = flow.get(\"WakeTime\");\n}\nelse if (msg.topic == \"WakeTime\")\n{\n    WakeTime = msg.payload;\n    flow.set(\"WakeTime\", WakeTime);\n    SleepTime = flow.get(\"SleepTime\");\n}\nelse {\n    WakeTime = flow.get(\"WakeTime\");\n    SleepTime = flow.get(\"SleepTime\");\n}\n\nif ((SleepTime == undefined) || (WakeTime == undefined))\n{\n    msg.payload= \"\";\n}\nelse\n{\n    // Compare the current time with the sleep time and wake time\n    curr_date = new Date();\n    curr_hour = curr_date.getHours();\n    diff = WakeTime - SleepTime;\n    if (diff > 0)\n    {\n        if ((curr_hour >= SleepTime) && (curr_hour < WakeTime))\n        {\n            SleepFlag = {payload: 1};\n        }\n        else\n        {\n            SleepFlag = {payload: 0};\n        }\n    }\n    else if (diff < 0)\n    {\n        if ((curr_hour >= SleepTime) || (curr_hour < WakeTime))\n        {\n            SleepFlag = {payload: 1};\n        }\n        else\n        {\n            SleepFlag = {payload: 0};\n        }\n    }\n    else\n    {\n        SleepFlag = {payload: 0};\n    }\n    \n    // Compute the sleeping time duration\n    if (SleepTime > WakeTime)\n    {\n        SleepCounter = {payload: (24-SleepTime+WakeTime)*60*60*1000};\n    }\n    else\n    {\n        SleepCounter = {payload: (WakeTime-SleepTime)*60*60*1000};\n    }\n    \n    // To display the selected time frame\n    if ((SleepTime < 12) && (WakeTime < 12))\n        display = SleepTime.toString() + \"am to \" + WakeTime.toString() + \"am\";    \n    else if ((SleepTime < 12) && (WakeTime > 12))\n        display = SleepTime.toString() + \"am to \" + WakeTime.toString() + \"pm\";\n    else if ((SleepTime > 12) && (WakeTime < 12))\n        display = SleepTime.toString() + \"pm to \" + WakeTime.toString() + \"am\";\n    else\n        display = SleepTime.toString() + \"pm to \" + WakeTime.toString() + \"pm\";\n    display = {payload: display};\n}\n\nreturn [SleepFlag, SleepCounter, display];",
+        "outputs": 3,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1460,
+        "y": 860,
+        "wires": [
+            [
+                "e7166f93975066b5"
+            ],
+            [
+                "d2ec2dd984369939"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "6a708e69fbe9691d",
+        "type": "ui_dropdown",
+        "z": "0c07bffa7abc86ef",
+        "name": "Sleep Time",
+        "label": "Sleep Time",
+        "tooltip": "",
+        "place": "Sleep Time",
+        "group": "4aeeda84.4d6a14",
+        "order": 14,
+        "width": 9,
+        "height": 1,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "",
+                "value": 0,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 1,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 2,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 3,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 4,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 5,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 6,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 7,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 8,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 9,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 10,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 11,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 12,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 13,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 14,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 15,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 16,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 17,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 18,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 19,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 20,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 21,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 22,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 23,
+                "type": "num"
+            }
+        ],
+        "payload": "",
+        "topic": "SleepTime",
+        "topicType": "str",
+        "x": 1250,
+        "y": 880,
+        "wires": [
+            [
+                "4d6fe37ce13433d7"
+            ]
+        ]
+    },
+    {
+        "id": "7c8f0818dd79ffac",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "4aeeda84.4d6a14",
+        "order": 13,
+        "width": 9,
+        "height": 1,
+        "name": "Sleep time title",
+        "label": "Set the sleeping time",
+        "format": "",
+        "layout": "row-spread",
+        "x": 1260,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "e7166f93975066b5",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Set SleepFlag",
+        "func": "item_code = flow.get('ws.item')\n\nswitch (item_code)\n{\n    case \"A03\":\n        flow.set(\"scale1.SleepFlag\", msg.payload);\n        break;\n    case \"A02\":\n        flow.set(\"scale2.SleepFlag\", msg.payload);\n        break;\n\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1700,
+        "y": 820,
+        "wires": [
+            [
+                "ef11db60edec6fd3"
+            ]
+        ]
+    },
+    {
+        "id": "d2ec2dd984369939",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Set SleepCounter",
+        "func": "item_code = flow.get('ws.item')\n\nswitch (item_code)\n{\n    case \"A03\":\n        flow.set(\"scale1.SleepCounter\", msg.payload);\n        break;\n    case \"A02\":\n        flow.set(\"scale2.SleepCounter\", msg.payload);\n        break;\n\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1710,
+        "y": 860,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7dacd1240d92c2df",
+        "type": "ui_dropdown",
+        "z": "0c07bffa7abc86ef",
+        "name": "Wake Time",
+        "label": "WakeTime",
+        "tooltip": "",
+        "place": "WakeTime",
+        "group": "4aeeda84.4d6a14",
+        "order": 15,
+        "width": 9,
+        "height": 1,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "",
+                "value": 0,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 1,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 2,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 3,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 4,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 5,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 6,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 7,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 8,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 9,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 10,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 11,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 12,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 13,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 14,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 15,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 16,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 17,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 18,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 19,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 20,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 21,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 22,
+                "type": "num"
+            },
+            {
+                "label": "",
+                "value": 23,
+                "type": "num"
+            }
+        ],
+        "payload": "",
+        "topic": "WakeTime",
+        "topicType": "str",
+        "x": 1250,
+        "y": 920,
+        "wires": [
+            [
+                "4d6fe37ce13433d7"
+            ]
+        ]
+    },
+    {
+        "id": "ba7f6a26bdc788e8",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "Sleep mode",
+        "info": "",
+        "x": 1250,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "b910bff1b3fff28c",
+        "type": "debug",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1130,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "dc39b8507fe7d93f",
+        "type": "debug",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 890,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "ef11db60edec6fd3",
+        "type": "debug",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1920,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "97313b899bc23ca4",
+        "type": "inject",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.001",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 980,
+        "y": 60,
+        "wires": [
+            [
+                "de4492ce944abd80",
+                "95af972bbc5628e0"
+            ]
+        ]
+    },
+    {
+        "id": "de4492ce944abd80",
+        "type": "change",
+        "z": "0c07bffa7abc86ef",
+        "name": "Set ERPNEXT website domain name",
+        "rules": [
+            {
+                "t": "set",
+                "p": "domain",
+                "pt": "global",
+                "to": "http://45.76.187.110:8000",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1290,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "95af972bbc5628e0",
+        "type": "change",
+        "z": "0c07bffa7abc86ef",
+        "name": "Set ERPNEXT token",
+        "rules": [
+            {
+                "t": "set",
+                "p": "erpnext_api_key",
+                "pt": "global",
+                "to": "92f1f74a0f612d4",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "erpnext_api_secret",
+                "pt": "global",
+                "to": "3c31ea987771341",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1240,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "68eabfa2de47edab",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Select Table in Mysql",
+        "func": "msg.topic = 'select * from user;';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2300,
+        "y": 1220,
+        "wires": [
+            [
+                "3bc3590a5bc733e8"
+            ]
+        ]
+    },
+    {
+        "id": "7c6febe28e006f31",
+        "type": "inject",
+        "z": "0c07bffa7abc86ef",
+        "name": "Press To View Data in Mysql",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 2040,
+        "y": 1220,
+        "wires": [
+            [
+                "68eabfa2de47edab"
+            ]
+        ]
+    },
+    {
+        "id": "e5565294466651b6",
+        "type": "debug",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2690,
+        "y": 1180,
+        "wires": []
+    },
+    {
+        "id": "f807bf9ab892cb65",
+        "type": "ui_form",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "label": "",
+        "group": "eb4ec883742204ec",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Id",
+                "value": "id",
+                "type": "number",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "Name",
+                "value": "name",
+                "type": "text",
+                "required": true,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "id": "",
+            "name": ""
+        },
+        "payload": "",
+        "submit": "submit",
+        "cancel": "cancel",
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": "",
+        "className": "",
+        "x": 1970,
+        "y": 1380,
+        "wires": [
+            [
+                "e20f0a0849d7677e",
+                "a4e3397b556603de"
+            ]
+        ]
+    },
+    {
+        "id": "e20f0a0849d7677e",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Add Info in Mysql",
+        "func": "var id = msg.payload.id;\nvar name = msg.payload.name;\nvar password = msg.payload.password;\n//var release_year = msg.payload.release_year;\n\nmsg.topic = 'INSERT INTO `user`.`user` (`id`,`name`,`password`)VALUES('+id+', \"'+name+'\",\"'+password+'\");';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2170,
+        "y": 1380,
+        "wires": [
+            [
+                "b3a0532bab712012",
+                "0799f2167c3ab6d5"
+            ]
+        ]
+    },
+    {
+        "id": "a4e3397b556603de",
+        "type": "debug",
+        "z": "0c07bffa7abc86ef",
+        "name": "View User Input",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2160,
+        "y": 1320,
+        "wires": []
+    },
+    {
+        "id": "b3a0532bab712012",
+        "type": "debug",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2410,
+        "y": 1380,
+        "wires": []
+    },
+    {
+        "id": "94aec9fe4b253dce",
+        "type": "ui_template",
+        "z": "0c07bffa7abc86ef",
+        "group": "3ebd3482849ef27d",
+        "name": "",
+        "order": 1,
+        "width": "12",
+        "height": "10",
+        "format": "<style>\n    #history {\n      font-family: \"Arial\";\n        border-collapse: collapse;\n        width: 100%;\n        }\n        \n        #history td, #history th {\n        border: 1px solid #ddd;\n        padding: 8px;\n        }\n        #history tr:nth-child(even){background-color: #A8EEF8;}\n        \n        #history tr:hover {background-color: #40aeea;}\n        \n        #history th {\n        padding-top: 12px;\n        padding-bottom: 12px;\n        text-align: center;\n        background-color: #696969;\n        color: white;\n        }\n        </style>\n        \n        <table id=\"history\" border=\"1\">\n            <tr align=\"center\">\n\n                 <th>Id</th>\n                 <th>Username</th>\n                 <th>Password(Encrypted)</th>\n                 \n\n            </tr>\n                <tbody>\n                    <tr align=\"center\" ng-repeat=\"row in msg.payload\">\n                        <td ng-repeat=\"item in row\" >{{item}}</td>\n                        </tr>\n                        </tbody>\n                        </table>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 2680,
+        "y": 1220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fd16c6a39cce510a",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Return Feedback",
+        "func": "if (msg.payload.affectedRows == 1){\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2590,
+        "y": 1300,
+        "wires": [
+            [
+                "7c6704110ec50018"
+            ]
+        ]
+    },
+    {
+        "id": "cb532f323f5ad8c4",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Update name",
+        "func": "var id = global.get(`id`,msg.payload);\nvar name = global.get(`name`,msg.payload);\n\nmsg.topic = \"UPDATE `user` SET `name` = '\"+name+\"' WHERE`id`='\"+id+\"';\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2240,
+        "y": 980,
+        "wires": [
+            [
+                "50a17a4c5cfa8d55"
+            ]
+        ]
+    },
+    {
+        "id": "ad964a8865910013",
+        "type": "ui_button",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "group": "3ebd3482849ef27d",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Update name",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 2000,
+        "y": 980,
+        "wires": [
+            [
+                "cb532f323f5ad8c4"
+            ]
+        ]
+    },
+    {
+        "id": "0e624f2ae5238137",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Select Global id",
+        "func": "global.set('id',msg.payload);\n//global.set('genre',msg.payload.genre);\nvar id = global.get('id');\n//var genre = global.get('genre');\nmsg.topic = \"SELECT name FROM user WHERE id = '\"+id+\"';\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2180,
+        "y": 1100,
+        "wires": [
+            [
+                "32706c07e505a3a6"
+            ]
+        ]
+    },
+    {
+        "id": "147ef4edbfc96ce7",
+        "type": "debug",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2710,
+        "y": 1100,
+        "wires": []
+    },
+    {
+        "id": "ce721667dc1b6465",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Extract name",
+        "func": "msg.payload = msg.payload[0].name;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2570,
+        "y": 1040,
+        "wires": [
+            [
+                "f9f092070dd3c8a9"
+            ]
+        ]
+    },
+    {
+        "id": "c0abc16cb5fb0e17",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "func": "global.set('name',msg.payload);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2940,
+        "y": 1040,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b09a93500ebf3ede",
+        "type": "link out",
+        "z": "0c07bffa7abc86ef",
+        "name": "LinkGenre",
+        "mode": "link",
+        "links": [
+            "d2b46b69123cf99a"
+        ],
+        "x": 2815,
+        "y": 980,
+        "wires": []
+    },
+    {
+        "id": "50a17a4c5cfa8d55",
+        "type": "mysql",
+        "z": "0c07bffa7abc86ef",
+        "mydb": "914dcea615c2771a",
+        "name": "nodered database",
+        "x": 2470,
+        "y": 980,
+        "wires": [
+            [
+                "dfc3539d3847d4ab"
+            ]
+        ]
+    },
+    {
+        "id": "dfc3539d3847d4ab",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Return Feedback",
+        "func": "if (msg.payload.affectedRows == 1){\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2670,
+        "y": 980,
+        "wires": [
+            [
+                "b09a93500ebf3ede"
+            ]
+        ]
+    },
+    {
+        "id": "d2b46b69123cf99a",
+        "type": "link in",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "links": [
+            "7c6704110ec50018",
+            "b09a93500ebf3ede"
+        ],
+        "x": 2195,
+        "y": 1160,
+        "wires": [
+            [
+                "68eabfa2de47edab"
+            ]
+        ]
+    },
+    {
+        "id": "7c6704110ec50018",
+        "type": "link out",
+        "z": "0c07bffa7abc86ef",
+        "name": "LinkForm",
+        "mode": "link",
+        "links": [
+            "d2b46b69123cf99a"
+        ],
+        "x": 2725,
+        "y": 1300,
+        "wires": []
+    },
+    {
+        "id": "459a4dd8cea49831",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "List of Users Registered Using Mysql",
+        "info": "",
+        "x": 2060,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "32706c07e505a3a6",
+        "type": "mysql",
+        "z": "0c07bffa7abc86ef",
+        "mydb": "914dcea615c2771a",
+        "name": "nodered database",
+        "x": 2470,
+        "y": 1100,
+        "wires": [
+            [
+                "ce721667dc1b6465",
+                "147ef4edbfc96ce7"
+            ]
+        ]
+    },
+    {
+        "id": "3bc3590a5bc733e8",
+        "type": "mysql",
+        "z": "0c07bffa7abc86ef",
+        "mydb": "914dcea615c2771a",
+        "name": "nodered database",
+        "x": 2510,
+        "y": 1220,
+        "wires": [
+            [
+                "e5565294466651b6",
+                "94aec9fe4b253dce"
+            ]
+        ]
+    },
+    {
+        "id": "f9f092070dd3c8a9",
+        "type": "ui_text_input",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "label": "name",
+        "tooltip": "",
+        "group": "3ebd3482849ef27d",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "mode": "text",
+        "delay": 300,
+        "topic": "topic",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 2750,
+        "y": 1040,
+        "wires": [
+            [
+                "c0abc16cb5fb0e17"
+            ]
+        ]
+    },
+    {
+        "id": "ad2f716dadab2eb5",
+        "type": "ui_numeric",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "label": "id",
+        "tooltip": "",
+        "group": "3ebd3482849ef27d",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "wrap": false,
+        "passthru": true,
+        "topic": "topic",
+        "topicType": "msg",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "className": "",
+        "x": 1970,
+        "y": 1100,
+        "wires": [
+            [
+                "0e624f2ae5238137"
+            ]
+        ]
+    },
+    {
+        "id": "0799f2167c3ab6d5",
+        "type": "mysql",
+        "z": "0c07bffa7abc86ef",
+        "mydb": "914dcea615c2771a",
+        "name": "nodered database",
+        "x": 2390,
+        "y": 1340,
+        "wires": [
+            [
+                "fd16c6a39cce510a"
+            ]
+        ]
+    },
+    {
+        "id": "afae5edb41dbd37e",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "Edit User",
+        "info": "",
+        "x": 1960,
+        "y": 1320,
+        "wires": []
+    },
+    {
+        "id": "6c9298d6532c8436",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "Registration",
+        "info": "",
+        "x": 1970,
+        "y": 1480,
+        "wires": []
+    },
+    {
+        "id": "ce986e05441dabb7",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "func": "var x = msg.payload.password;\nvar y = msg.payload[\"repeat password\"];\n\nif(x == y){\n    global.set('name',msg.payload.name);\n    global.set('password',msg.payload.password);\n    msg.payload = msg.payload.password;\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2140,
+        "y": 1520,
+        "wires": [
+            [
+                "8bf13c5dd8411c6a"
+            ]
+        ]
+    },
+    {
+        "id": "cffe6955631903c4",
+        "type": "ui_form",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "label": "",
+        "group": "d26b599bf72ca5c5",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Name",
+                "value": "name",
+                "type": "text",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "Password",
+                "value": "password",
+                "type": "password",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "Repeat Password",
+                "value": "repeat password",
+                "type": "password",
+                "required": true,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "name": "",
+            "password": "",
+            "repeat password": ""
+        },
+        "payload": "",
+        "submit": "Register",
+        "cancel": "cancel",
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": "",
+        "className": "",
+        "x": 1970,
+        "y": 1520,
+        "wires": [
+            [
+                "2be47cd28fc5a291",
+                "ce986e05441dabb7"
+            ]
+        ]
+    },
+    {
+        "id": "2be47cd28fc5a291",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "func": "var x = msg.payload.password;\nvar y = msg.payload[\"repeat password\"];\n\nif(x == y){\n    msg.payload = \"\";\n    return msg;\n}\n\nif(x != y){\n    msg.payload = \"Password does not match\";\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2140,
+        "y": 1580,
+        "wires": [
+            [
+                "2a5cd9cb0a34ec3c",
+                "6c1f23d2971134e0"
+            ]
+        ]
+    },
+    {
+        "id": "3fd2d34545edc806",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "setting password to global value",
+        "func": "global.set('passwordhash', msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2510,
+        "y": 1520,
+        "wires": [
+            [
+                "f6e338a385f07616"
+            ]
+        ]
+    },
+    {
+        "id": "f6e338a385f07616",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Insert",
+        "func": "var name = global.get('name');\nvar passwordhash = global.get('passwordhash');\n\nmsg.topic = 'INSERT INTO `user`.`user`(`name`,`password`) VALUES (\"'+name+'\",\"'+passwordhash+'\");';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2730,
+        "y": 1520,
+        "wires": [
+            [
+                "a1e84887e1b66588"
+            ]
+        ]
+    },
+    {
+        "id": "a1e84887e1b66588",
+        "type": "mysql",
+        "z": "0c07bffa7abc86ef",
+        "mydb": "914dcea615c2771a",
+        "name": "nodered database",
+        "x": 2930,
+        "y": 1520,
+        "wires": [
+            [
+                "37c3e9295afb8e2e"
+            ]
+        ]
+    },
+    {
+        "id": "37c3e9295afb8e2e",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "New User",
+        "func": "if(msg.payload.affectedRows == 1){\n    msg.payload = \"succesfully registered new user\";\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 3120,
+        "y": 1520,
+        "wires": [
+            [
+                "6c1f23d2971134e0",
+                "2a5cd9cb0a34ec3c"
+            ]
+        ]
+    },
+    {
+        "id": "2a5cd9cb0a34ec3c",
+        "type": "delay",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 3080,
+        "y": 1620,
+        "wires": [
+            [
+                "bb67344e2a1a2631"
+            ]
+        ]
+    },
+    {
+        "id": "bb67344e2a1a2631",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Clear",
+        "func": "msg.payload = \"\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 3250,
+        "y": 1620,
+        "wires": [
+            [
+                "6c1f23d2971134e0"
+            ]
+        ]
+    },
+    {
+        "id": "6c1f23d2971134e0",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "d26b599bf72ca5c5",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Status",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 3490,
+        "y": 1520,
+        "wires": []
+    },
+    {
+        "id": "02599b04c74eb17f",
+        "type": "catch",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "scope": [
+            "a1e84887e1b66588"
+        ],
+        "uncaught": false,
+        "x": 3070,
+        "y": 1700,
+        "wires": [
+            [
+                "fe8f9379a7a3d674"
+            ]
+        ]
+    },
+    {
+        "id": "fe8f9379a7a3d674",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Error for username",
+        "func": "if(msg.error.source.count == 1){\n    msg.payload = \"Error! name already exist!\";\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 3250,
+        "y": 1700,
+        "wires": [
+            [
+                "6c1f23d2971134e0",
+                "2a05bed991dfe9ae"
+            ]
+        ]
+    },
+    {
+        "id": "2a05bed991dfe9ae",
+        "type": "debug",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 3470,
+        "y": 1700,
+        "wires": []
+    },
+    {
+        "id": "72c61a0ac3a67a6a",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "Auto increment in primary key for mysql",
+        "info": "ID needed to be auto incremented or else error.\nChange in the terminal.",
+        "x": 2830,
+        "y": 1460,
+        "wires": []
+    },
+    {
+        "id": "6779454f7a431bf9",
+        "type": "ui_form",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "label": "",
+        "group": "4b2faf29b6a0d98a",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Name",
+                "value": "name",
+                "type": "text",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "Password",
+                "value": "password",
+                "type": "password",
+                "required": true,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "name": "",
+            "password": ""
+        },
+        "payload": "",
+        "submit": "Log In",
+        "cancel": "Cancel",
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": "",
+        "className": "",
+        "x": 1970,
+        "y": 1780,
+        "wires": [
+            [
+                "be8b9899c00e59c3",
+                "4912a44be68004e2"
+            ]
+        ]
+    },
+    {
+        "id": "be8b9899c00e59c3",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Global V Password Check",
+        "func": "global.set(\"passwordcheck\", msg.payload.password);\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2190,
+        "y": 1740,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4912a44be68004e2",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "func": "msg.topic = \"SELECT name, password FROM user.user WHERE name = '\"+msg.payload.name+\"';\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2140,
+        "y": 1820,
+        "wires": [
+            [
+                "e4b229e8d179a350"
+            ]
+        ]
+    },
+    {
+        "id": "a81db1f5856c76d9",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Global Variable",
+        "func": "global.set('currentuser',\"Guest\");\nglobal.set('currentuserbuffer',\"\");\nglobal.set('name',\"\");\nglobal.set('password',\"\");\nglobal.set('passwordhash',\"\");\nglobal.set('passwordcheck',\"\");",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2160,
+        "y": 1900,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e4b229e8d179a350",
+        "type": "mysql",
+        "z": "0c07bffa7abc86ef",
+        "mydb": "914dcea615c2771a",
+        "name": "nodered database",
+        "x": 2390,
+        "y": 1820,
+        "wires": [
+            [
+                "6defe79ef5b0d7cc",
+                "bc27b3631c19803f"
+            ]
+        ]
+    },
+    {
+        "id": "6defe79ef5b0d7cc",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Check Password",
+        "func": "var passwordcheck = global.get('passwordcheck');\n\nglobal.set('currentuserbuffer',msg.payload[0].name);\nmsg.payload =\n{\n    \"txt\" : \"\"+passwordcheck+\"\",\n    \"hash\" : \"\"+msg.payload[0].password+\"\"\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2630,
+        "y": 1820,
+        "wires": [
+            [
+                "6fb7e7fa65c0ec88"
+            ]
+        ]
+    },
+    {
+        "id": "bc27b3631c19803f",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "func": "var x = msg.payload.length;\nif (x === 0){\n    msg.payload = \"Error! Incorrect Password\";\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2600,
+        "y": 1880,
+        "wires": [
+            [
+                "1e602f0912967b7e",
+                "5feee004bbd2508d"
+            ]
+        ]
+    },
+    {
+        "id": "9245d4ed6ac31f8d",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "func": "if(msg.match === true){\n    msg.payload = \"login succesful\";\n    var x = global.get('currentuserbuffer');\n    global.set('currentuser', x)\n    return msg;\n}\nelse {\n    msg.payload = \"Please try again\";\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2960,
+        "y": 1820,
+        "wires": [
+            [
+                "5feee004bbd2508d",
+                "1e602f0912967b7e"
+            ]
+        ]
+    },
+    {
+        "id": "266924a2fbc223bc",
+        "type": "ui_button",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "group": "4b2faf29b6a0d98a",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Log Out",
+        "tooltip": "",
+        "color": "white",
+        "bgcolor": "red",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 1980,
+        "y": 1900,
+        "wires": [
+            [
+                "a81db1f5856c76d9"
+            ]
+        ]
+    },
+    {
+        "id": "5feee004bbd2508d",
+        "type": "delay",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 3160,
+        "y": 1900,
+        "wires": [
+            [
+                "da8415e74f5d4902"
+            ]
+        ]
+    },
+    {
+        "id": "da8415e74f5d4902",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Clear",
+        "func": "msg.payload = \"\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 3330,
+        "y": 1900,
+        "wires": [
+            [
+                "1e602f0912967b7e"
+            ]
+        ]
+    },
+    {
+        "id": "1e602f0912967b7e",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "4b2faf29b6a0d98a",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Status",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 3570,
+        "y": 1800,
+        "wires": []
+    },
+    {
+        "id": "8113d2fb119cfb17",
+        "type": "catch",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "scope": [
+            "6defe79ef5b0d7cc"
+        ],
+        "uncaught": false,
+        "x": 2750,
+        "y": 1980,
+        "wires": [
+            [
+                "91714e96bee035a7"
+            ]
+        ]
+    },
+    {
+        "id": "91714e96bee035a7",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Error for username",
+        "func": "if(msg.error.source.count == 1){\n    msg.payload = \"Error! Username is incorrect\";\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2930,
+        "y": 1980,
+        "wires": [
+            [
+                "1e602f0912967b7e",
+                "5feee004bbd2508d"
+            ]
+        ]
+    },
+    {
+        "id": "a55b3553604af0d9",
+        "type": "inject",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 1990,
+        "y": 2040,
+        "wires": [
+            [
+                "5bca351f1b36c03d"
+            ]
+        ]
+    },
+    {
+        "id": "5bca351f1b36c03d",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "func": "msg.payload = global.get('currentuser');\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2180,
+        "y": 2040,
+        "wires": [
+            [
+                "b07de0f6c6c2defd"
+            ]
+        ]
+    },
+    {
+        "id": "b07de0f6c6c2defd",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "4b2faf29b6a0d98a",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Current Logged In User",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 2410,
+        "y": 2040,
+        "wires": []
+    },
+    {
+        "id": "d34b86c0f424818c",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "Log In",
+        "info": "",
+        "x": 1950,
+        "y": 1700,
+        "wires": []
+    },
+    {
+        "id": "5d06bcbf3b6adb8c",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "Current User Logged In",
+        "info": "",
+        "x": 2000,
+        "y": 1980,
+        "wires": []
+    },
+    {
+        "id": "1b540942a2c3260d",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "Update Password",
+        "info": "",
+        "x": 1990,
+        "y": 2120,
+        "wires": []
+    },
+    {
+        "id": "d2010d954859d4a4",
+        "type": "ui_form",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "label": "",
+        "group": "9339b186cccd5de6",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Old Password",
+                "value": "old password",
+                "type": "password",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "New Password",
+                "value": "new password",
+                "type": "password",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "Confirm New Password",
+                "value": "confirm new password",
+                "type": "password",
+                "required": true,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "old password": "",
+            "new password": "",
+            "confirm new password": ""
+        },
+        "payload": "",
+        "submit": "Update",
+        "cancel": "Cancel",
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": "",
+        "className": "",
+        "x": 1950,
+        "y": 2220,
+        "wires": [
+            [
+                "8dbb82df9af7bcfc",
+                "19d4afc3e6311bc5",
+                "dda2c0b57aafa6d0",
+                "26bb4d2f438b7dea"
+            ]
+        ]
+    },
+    {
+        "id": "8dbb82df9af7bcfc",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Set Old Password",
+        "func": "var x = msg.payload[\"old password\"];\nglobal.set('oldpassword', x)\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2170,
+        "y": 2200,
+        "wires": [
+            [
+                "4e33da668a52bf47"
+            ]
+        ]
+    },
+    {
+        "id": "4e33da668a52bf47",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Select Table in Mysql",
+        "func": "var currentuser = global.get('currentuser');\n\nmsg.topic = \"SELECT name, password FROM user.user WHERE name = '\"+currentuser+\"';\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2400,
+        "y": 2200,
+        "wires": [
+            [
+                "699b727ed562bf09"
+            ]
+        ]
+    },
+    {
+        "id": "699b727ed562bf09",
+        "type": "mysql",
+        "z": "0c07bffa7abc86ef",
+        "mydb": "914dcea615c2771a",
+        "name": "nodered database",
+        "x": 2630,
+        "y": 2200,
+        "wires": [
+            [
+                "4219e3f06d2a61b0",
+                "391feb5275528cf3"
+            ]
+        ]
+    },
+    {
+        "id": "4219e3f06d2a61b0",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Check Old Password",
+        "func": "var oldpassword = global.get('oldpassword');\n\nmsg.payload =\n{\n    \"txt\" : \"\"+oldpassword+\"\",\n    \"hash\" : \"\"+msg.payload[0].password+\"\"\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2880,
+        "y": 2200,
+        "wires": [
+            [
+                "845b41fc1b9889a6"
+            ]
+        ]
+    },
+    {
+        "id": "f63886dc60821b1c",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Wrong Password",
+        "func": "if(msg.match === false){\n    msg.payload = \"Incorrect Old Password\";\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 3290,
+        "y": 2160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "aba2370c04b4e877",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Return New Password",
+        "func": "var newpassword = global.get('newpassword');\nvar passwordmatch = global.get('passwordmatch') || false;\n\nif(msg.match === true && passwordmatch === true){\n    msg.payload = newpassword;\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 3300,
+        "y": 2220,
+        "wires": [
+            [
+                "df332ed58968c9fc"
+            ]
+        ]
+    },
+    {
+        "id": "0c7ea51afde0e426",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Update New Password",
+        "func": "var currentuser = global.get('currentuser');\nmsg.topic = \"UPDATE `user`.`user` SET `password` = '\"+msg.payload+\"' WHERE `name` = '\"+currentuser+\"';\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 3300,
+        "y": 2300,
+        "wires": [
+            [
+                "305b657884c10ef5",
+                "26a3e4ebf46e1b42"
+            ]
+        ]
+    },
+    {
+        "id": "19d4afc3e6311bc5",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Error handling new password",
+        "func": "var x = msg.payload[\"new password\"];\nvar y = msg.payload[\"confirm new password\"];\n\nif (x == y){\n    global.set('passwordmatch', true);\n    global.set('newpassword', x)\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2200,
+        "y": 2260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "dda2c0b57aafa6d0",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Update Status",
+        "func": "var x = msg.payload[\"new password\"];\nvar y = msg.payload[\"confirm new password\"];\n\nif (x != y){\n    global.set('passwordmatch', false);\n    msg.payload = \"password does not match\"\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2160,
+        "y": 2320,
+        "wires": [
+            [
+                "d173c4c061b40fb5"
+            ]
+        ]
+    },
+    {
+        "id": "d173c4c061b40fb5",
+        "type": "link out",
+        "z": "0c07bffa7abc86ef",
+        "name": "UpdateStatusPassword",
+        "mode": "link",
+        "links": [
+            "3476fd5d2e932cad",
+            "70bcc0c22135a0e0",
+            "b8f6acfe8de49a82"
+        ],
+        "x": 2295,
+        "y": 2320,
+        "wires": []
+    },
+    {
+        "id": "15116a1a4a427703",
+        "type": "inject",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 1990,
+        "y": 2440,
+        "wires": [
+            [
+                "e72656984d1b25a3"
+            ]
+        ]
+    },
+    {
+        "id": "e72656984d1b25a3",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "func": "msg.payload = global.get('currentuser');\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2160,
+        "y": 2440,
+        "wires": [
+            [
+                "f6e6cb6e55e2b795"
+            ]
+        ]
+    },
+    {
+        "id": "f6e6cb6e55e2b795",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "9339b186cccd5de6",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Current Logged In User",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 2390,
+        "y": 2440,
+        "wires": []
+    },
+    {
+        "id": "2f44e1d77d08f742",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "Current User Logged In",
+        "info": "",
+        "x": 2000,
+        "y": 2380,
+        "wires": []
+    },
+    {
+        "id": "26bb4d2f438b7dea",
+        "type": "debug",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2170,
+        "y": 2140,
+        "wires": []
+    },
+    {
+        "id": "391feb5275528cf3",
+        "type": "debug",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2670,
+        "y": 2140,
+        "wires": []
+    },
+    {
+        "id": "305b657884c10ef5",
+        "type": "debug",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 3490,
+        "y": 2360,
+        "wires": []
+    },
+    {
+        "id": "918a993bede48fb7",
+        "type": "inject",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 1990,
+        "y": 2600,
+        "wires": [
+            [
+                "14ef4b82a18f541a"
+            ]
+        ]
+    },
+    {
+        "id": "14ef4b82a18f541a",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Admin/Guest/Operator",
+        "func": "var user = global.get('currentuser');\n\nif(user === \"Guest\"){\n   msg.payload =\n    {\n        \"tabs\" : {\n            \"hide\" : [\"New_Password\", \"Settings\"]\n        },\n        \"group\" :\n        {\n            \"hide\" : [\"Station_Dashboard_V1_Set_2\" , \"Station_Dashboard_V2_Set_A\" , \"Station_Dashboard_V2_Set_B\" , \"Station_Dashboard_V2_Set_C\"]\n        }/*,\n        \"text node\" : {\n            \"hide\" : [\"Station_Dashboard_V1_Set_1_Name\"]\n        }*/\n    }\n\n    return msg;\n}\nelse if (user === \"admin\"){\n    msg.payload =\n    {\n        \"tabs\" : {\n            \"show\" : [\"Log-In_Page\", \"New_Password\" , \"Station_Dashboard_V1\" , \"Station_Dashboard_V2\", \"Settings\" , \"Registration_Page\"]\n        },\n        \"group\" :\n        {\n            \"show\" : [\"Update_Password\" , \"Station_Dashboard_V1_Set_2\" , \"Station_Dashboard_V2_Set_A\" , \"Station_Dashboard_V2_Set_B\" , \"Station_Dashboard_V2_Set_C\"]\n        }\n    }\n return msg;   \n}\nelse if (user !== \"admin\" || user !== \"Guest\"){\n    msg.payload =\n    {\n        \"tabs\" : {\n            \"hide\" : [\"Settings\", \"Registration_Page\"],\n            \"show\" : [\"New_Password\"]\n            \n        }\n    }\n   return msg; \n}\nelse{\n    msg.payload = {\n        \"tabs\" :{\n            \"hide\":[\"Registration_Page\", \"Settings\",\"New_Password\", \"Station_Dashboard_V1\", \"Station_Dashboard_V2\"]\n        }\n    }\n    return msg;\n}\n\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2200,
+        "y": 2600,
+        "wires": [
+            [
+                "08051a11d3fab70d",
+                "4c4d6b8c86d51856"
+            ]
+        ]
+    },
+    {
+        "id": "4c4d6b8c86d51856",
+        "type": "debug",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2430,
+        "y": 2540,
+        "wires": []
+    },
+    {
+        "id": "08051a11d3fab70d",
+        "type": "ui_ui_control",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "events": "all",
+        "x": 2420,
+        "y": 2600,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6f044c153104c1d3",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "Show/Hide Interface",
+        "info": "",
+        "x": 1990,
+        "y": 2520,
+        "wires": []
+    },
+    {
+        "id": "0f6e1839ef12b392",
+        "type": "ui_button",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "group": "4b2faf29b6a0d98a",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Register",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "1",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 1960,
+        "y": 2760,
+        "wires": [
+            [
+                "8f94274a086a8fde"
+            ]
+        ]
+    },
+    {
+        "id": "8f94274a086a8fde",
+        "type": "ui_ui_control",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "events": "all",
+        "x": 2140,
+        "y": 2760,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "822d7ed6cdb7a68e",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "Change Tab with button",
+        "info": "",
+        "x": 2000,
+        "y": 2700,
+        "wires": []
+    },
+    {
+        "id": "8bf13c5dd8411c6a",
+        "type": "bcrypt",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "action": "encrypt",
+        "field": "payload",
+        "hash": "payload",
+        "rounds": "4",
+        "x": 2290,
+        "y": 1520,
+        "wires": [
+            [
+                "3fd2d34545edc806"
+            ]
+        ]
+    },
+    {
+        "id": "6fb7e7fa65c0ec88",
+        "type": "bcrypt",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "action": "verify",
+        "field": "payload.txt",
+        "hash": "payload.hash",
+        "rounds": 10,
+        "x": 2810,
+        "y": 1820,
+        "wires": [
+            [
+                "9245d4ed6ac31f8d"
+            ]
+        ]
+    },
+    {
+        "id": "845b41fc1b9889a6",
+        "type": "bcrypt",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "action": "verify",
+        "field": "payload.txt",
+        "hash": "payload.hash",
+        "rounds": "10",
+        "x": 3090,
+        "y": 2200,
+        "wires": [
+            [
+                "f63886dc60821b1c",
+                "aba2370c04b4e877"
+            ]
+        ]
+    },
+    {
+        "id": "df332ed58968c9fc",
+        "type": "bcrypt",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "action": "encrypt",
+        "field": "payload",
+        "hash": "",
+        "rounds": "4",
+        "x": 3090,
+        "y": 2300,
+        "wires": [
+            [
+                "0c7ea51afde0e426"
+            ]
+        ]
+    },
+    {
+        "id": "26a3e4ebf46e1b42",
+        "type": "mysql",
+        "z": "0c07bffa7abc86ef",
+        "mydb": "914dcea615c2771a",
+        "name": "nodered database",
+        "x": 3550,
+        "y": 2300,
+        "wires": [
+            [
+                "25deb00b85cd7598"
+            ]
+        ]
+    },
+    {
+        "id": "25deb00b85cd7598",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "func": "if (msg.payload.changedRows === 1 && msg.match === true){\n    msg.payload = \"password updated\"\n    return msg;\n}\n\nif (msg.payload.changedRows === 0 && msg.match === true){\n    msg.payload = \"old and new password is the same\"\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 3540,
+        "y": 2220,
+        "wires": [
+            [
+                "3aad1b19c906bb85",
+                "2117655ec9afd7aa"
+            ]
+        ]
+    },
+    {
+        "id": "3aad1b19c906bb85",
+        "type": "delay",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 3720,
+        "y": 2220,
+        "wires": [
+            [
+                "dc53f2cbeb788ff5"
+            ]
+        ]
+    },
+    {
+        "id": "2117655ec9afd7aa",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "9339b186cccd5de6",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Status",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 4010,
+        "y": 2220,
+        "wires": []
+    },
+    {
+        "id": "dc53f2cbeb788ff5",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Clear",
+        "func": "msg.payload = \"\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 3870,
+        "y": 2220,
+        "wires": [
+            [
+                "2117655ec9afd7aa"
+            ]
+        ]
+    },
+    {
+        "id": "70bcc0c22135a0e0",
+        "type": "link in",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "links": [
+            "03ed973a2a840980",
+            "d173c4c061b40fb5",
+            "dba909fb1c86375f"
+        ],
+        "x": 3575,
+        "y": 2140,
+        "wires": [
+            [
+                "2117655ec9afd7aa",
+                "3aad1b19c906bb85"
+            ]
+        ]
+    },
+    {
+        "id": "0bf1b85519472f36",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "cfb9167f.800f5",
+        "order": 3,
+        "width": 10,
+        "height": 1,
+        "name": "",
+        "label": "Weight Per Item (g)",
+        "format": "{{msg.payload | number: 2}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 550,
+        "y": 1800,
+        "wires": []
+    },
+    {
+        "id": "b5d338904e7182c0",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "func": "msg1 = {payload: flow.get('ws1.mpi')};\nmsg2 = {payload: flow.get('ws2.mpi')};\n\nreturn [msg1,msg2];\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 1780,
+        "wires": [
+            [
+                "2b137cd4a0fbdd60"
+            ],
+            [
+                "0bf1b85519472f36"
+            ]
+        ]
+    },
+    {
+        "id": "2b137cd4a0fbdd60",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "ed6f1410.bde42",
+        "order": 3,
+        "width": 10,
+        "height": 1,
+        "name": "",
+        "label": "Weight Per Item (g)",
+        "format": "{{msg.payload | number: 2}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 550,
+        "y": 1760,
+        "wires": []
+    },
+    {
+        "id": "5c6c059927de0d7d",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "DISPLAY WEIGHT PER ITEM",
+        "info": "",
+        "x": 400,
+        "y": 1720,
+        "wires": []
+    },
+    {
+        "id": "2676496203fef5b2",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "func": "msg1 = {payload: flow.get('ws1.numberofpackages')};\nmsg2 = {payload: flow.get('ws2.numberofpackages')};\n\nreturn [msg1,msg2];\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 1920,
+        "wires": [
+            [
+                "4c7903a9332aff15",
+                "a4c1892e0ccc2f5b"
+            ],
+            [
+                "ef1438c3037cdc0b",
+                "a4c1892e0ccc2f5b"
+            ]
+        ]
+    },
+    {
+        "id": "4c7903a9332aff15",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "ed6f1410.bde42",
+        "order": 4,
+        "width": 10,
+        "height": 1,
+        "name": "",
+        "label": "Number of Packages",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 560,
+        "y": 1900,
+        "wires": []
+    },
+    {
+        "id": "ef1438c3037cdc0b",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "cfb9167f.800f5",
+        "order": 4,
+        "width": 10,
+        "height": 1,
+        "name": "",
+        "label": "Number of Packages",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 560,
+        "y": 1940,
+        "wires": []
+    },
+    {
+        "id": "86d1529b28cbb0c7",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "DISPLAY NUMBER OF PACKAGES",
+        "info": "",
+        "x": 420,
+        "y": 1860,
+        "wires": []
+    },
+    {
+        "id": "6978a62c93140168",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "func": "msg1 = {payload: flow.get('ws1.mass')};\nmsg2 = {payload: flow.get('ws2.mass')};\n\n\nreturn [msg1,msg2];\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 2100,
+        "wires": [
+            [
+                "34fd71b0fc45fe4f"
+            ],
+            [
+                "022500e5e27005fc"
+            ]
+        ]
+    },
+    {
+        "id": "34fd71b0fc45fe4f",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "ed6f1410.bde42",
+        "order": 5,
+        "width": 10,
+        "height": 1,
+        "name": "",
+        "label": "Weight (g)",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 970,
+        "y": 2080,
+        "wires": []
+    },
+    {
+        "id": "022500e5e27005fc",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "cfb9167f.800f5",
+        "order": 5,
+        "width": 10,
+        "height": 1,
+        "name": "",
+        "label": "Weight (g)",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 970,
+        "y": 2120,
+        "wires": []
+    },
+    {
+        "id": "c2773c809e6a1e2f",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "DISPLAY MASS",
+        "info": "",
+        "x": 780,
+        "y": 2040,
+        "wires": []
+    },
+    {
+        "id": "7924044b06571213",
+        "type": "change",
+        "z": "0c07bffa7abc86ef",
+        "name": "set y axis",
+        "rules": [
+            {
+                "t": "change",
+                "p": "payload",
+                "pt": "msg",
+                "from": "value",
+                "fromt": "str",
+                "to": "y",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1120,
+        "y": 1540,
+        "wires": [
+            [
+                "5cb4966ce3318ac5"
+            ]
+        ]
+    },
+    {
+        "id": "5cb4966ce3318ac5",
+        "type": "json",
+        "z": "0c07bffa7abc86ef",
+        "name": "convert to Obj",
+        "property": "payload",
+        "action": "",
+        "pretty": true,
+        "x": 1220,
+        "y": 1480,
+        "wires": [
+            [
+                "f883d2c49d524475"
+            ]
+        ]
+    },
+    {
+        "id": "f883d2c49d524475",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Graph Obj",
+        "func": "if (msg.topic == \"Workstation 1\")\n{\n    msg.payload = \n    [\n        {\n            \"series\": [\n                \"\"\n            ],\n            \"data\": [msg.payload],\n            \"labels\": [\n                \"\"\n            ]\n        }    \n    ]\n    flow.set('ws1.chart', msg.payload);\n}\nelse\n{\n    msg.payload = flow.get('ws1.chart');\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1330,
+        "y": 1540,
+        "wires": [
+            [
+                "9b6732a110db7cdf"
+            ]
+        ]
+    },
+    {
+        "id": "9b6732a110db7cdf",
+        "type": "ui_chart",
+        "z": "0c07bffa7abc86ef",
+        "name": "Chart (workstation1)",
+        "group": "c8b70fb7e75f6e93",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "Quantity",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "D/M HH:mm",
+        "interpolate": "linear",
+        "nodata": "NO DATA",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#73d216",
+            "#aec7e8",
+            "#ff7f0e",
+            "#73d216",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1540,
+        "y": 1540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "426261f2cad44eb6",
+        "type": "comment",
+        "z": "0c07bffa7abc86ef",
+        "name": "DISPLAY GRAPH",
+        "info": "",
+        "x": 1450,
+        "y": 1480,
+        "wires": []
+    },
+    {
+        "id": "31ad27929fadb728",
+        "type": "ui_chart",
+        "z": "0c07bffa7abc86ef",
+        "name": "Chart (workstation 2)",
+        "group": "3f5fa5b968aa051a",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "Quantity",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "D/M HH:mm",
+        "interpolate": "linear",
+        "nodata": "NO DATA",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#73d216",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1540,
+        "y": 1600,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "be329ba6629aace2",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Graph Obj",
+        "func": "if (msg.topic == \"Workstation 2\")\n{\n    msg.payload = \n    [\n        {\n            \"series\": [\n                \"\"\n            ],\n            \"data\": [msg.payload],\n            \"labels\": [\n                \"\"\n            ]\n        }    \n    ]\n    flow.set('ws2.chart', msg.payload);\n}\nelse\n{\n    msg.payload = flow.get('ws2.chart');\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1330,
+        "y": 1600,
+        "wires": [
+            [
+                "31ad27929fadb728"
+            ]
+        ]
+    },
+    {
+        "id": "57f75fc3d1975003",
+        "type": "json",
+        "z": "0c07bffa7abc86ef",
+        "name": "convert to Obj",
+        "property": "payload",
+        "action": "",
+        "pretty": true,
+        "x": 1220,
+        "y": 1660,
+        "wires": [
+            [
+                "be329ba6629aace2"
+            ]
+        ]
+    },
+    {
+        "id": "e88000a332daf9bb",
+        "type": "change",
+        "z": "0c07bffa7abc86ef",
+        "name": "set y axis",
+        "rules": [
+            {
+                "t": "change",
+                "p": "payload",
+                "pt": "msg",
+                "from": "value",
+                "fromt": "str",
+                "to": "y",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1120,
+        "y": 1600,
+        "wires": [
+            [
+                "57f75fc3d1975003"
+            ]
+        ]
+    },
+    {
+        "id": "1ace7c5cfe37a140",
+        "type": "change",
+        "z": "0c07bffa7abc86ef",
+        "name": "set x axis",
+        "rules": [
+            {
+                "t": "change",
+                "p": "payload",
+                "pt": "msg",
+                "from": "time",
+                "fromt": "str",
+                "to": "x",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 960,
+        "y": 1600,
+        "wires": [
+            [
+                "e88000a332daf9bb"
+            ]
+        ]
+    },
+    {
+        "id": "1fddcd2fc097a191",
+        "type": "change",
+        "z": "0c07bffa7abc86ef",
+        "name": "set x axis",
+        "rules": [
+            {
+                "t": "change",
+                "p": "payload",
+                "pt": "msg",
+                "from": "time",
+                "fromt": "str",
+                "to": "x",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 960,
+        "y": 1540,
+        "wires": [
+            [
+                "7924044b06571213"
+            ]
+        ]
+    },
+    {
+        "id": "117784875a874237",
+        "type": "json",
+        "z": "0c07bffa7abc86ef",
+        "name": "convert to JSON",
+        "property": "payload",
+        "action": "",
+        "pretty": true,
+        "x": 780,
+        "y": 1540,
+        "wires": [
+            [
+                "1fddcd2fc097a191"
+            ]
+        ]
+    },
+    {
+        "id": "0e8196a3b418bd53",
+        "type": "json",
+        "z": "0c07bffa7abc86ef",
+        "name": "convert to JSON",
+        "property": "payload",
+        "action": "",
+        "pretty": true,
+        "x": 780,
+        "y": 1600,
+        "wires": [
+            [
+                "1ace7c5cfe37a140"
+            ]
+        ]
+    },
+    {
+        "id": "eac50b5d6f719877",
+        "type": "influxdb in",
+        "z": "0c07bffa7abc86ef",
+        "influxdb": "d1a70d0d05e11b6f",
+        "name": "extract data",
+        "query": "",
+        "rawOutput": false,
+        "precision": "ms",
+        "retentionPolicy": "",
+        "org": "organisation",
+        "x": 590,
+        "y": 1540,
+        "wires": [
+            [
+                "117784875a874237",
+                "e8ce54ecbfeb9dc7"
+            ]
+        ]
+    },
+    {
+        "id": "b1efa6c0a8c30039",
+        "type": "influxdb in",
+        "z": "0c07bffa7abc86ef",
+        "influxdb": "211f2988135446d7",
+        "name": "extract data",
+        "query": "",
+        "rawOutput": false,
+        "precision": "ms",
+        "retentionPolicy": "",
+        "org": "organisation",
+        "x": 590,
+        "y": 1600,
+        "wires": [
+            [
+                "0e8196a3b418bd53",
+                "fcad59f2547cdf54"
+            ]
+        ]
+    },
+    {
+        "id": "cac0c2744ff21387",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "4aeeda84.4d6a14",
+        "order": 2,
+        "width": 4,
+        "height": 1,
+        "name": "",
+        "label": "Name",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 590,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "3517aae1118d5cf5",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "4aeeda84.4d6a14",
+        "order": 4,
+        "width": 4,
+        "height": 1,
+        "name": "",
+        "label": "Quantity (pcs)",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 620,
+        "y": 960,
+        "wires": []
+    },
+    {
+        "id": "df403eb4096aba92",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "func": "if (msg.topic == \"selection\")\n{\n    selected = msg.payload;\n    flow.set(\"ws.num\", selected);\n}\nelse if (msg.topic == \"update\")\n{\n    selected = {payload: flow.get(\"ws.num\")};\n    selected = selected.payload.toString();\n}\n\nswitch (selected) {\ncase \"Workstation 1\":\n    msg1 = {payload: flow.get('ws1.name')};\n    msg2 = {payload: flow.get('ws1.qty')};\n    msg3 = {payload: flow.get('ws1.threshold')};\n    msg4 = {payload: flow.get('ws1.bat_lvl')};\n    msg5 = {payload: flow.get('ws1.mass')};\n    msg6 = {payload: flow.get('ws1.mpi')};\n    msg7 = {payload: flow.get('ws1.numberofpackages')};\n    msg8 = {payload: flow.get('ws1.chart')};\n    item_code = flow.get('ws1.item');\n    break;\ncase \"Workstation 2\":\n    msg1 = {payload: flow.get('ws2.name')};\n    msg2 = {payload: flow.get('ws2.qty')};\n    msg3 = {payload: flow.get('ws2.threshold')};\n    msg4 = {payload: flow.get('ws2.bat_lvl')};\n    msg5 = {payload: flow.get('ws2.mass')};\n    msg6 = {payload: flow.get('ws2.mpi')};\n    msg7 = {payload: flow.get('ws2.numberofpackages')};\n    msg8 = {payload: flow.get('ws2.chart')};\n    item_code = flow.get('ws2.item');\n    break;\n/*case \"Workstation 3\":\n    msg1 = {payload: flow.get('ws3.name')};\n    msg2 = {payload: flow.get('ws3.qty')};\n    msg3 = {payload: flow.get('ws3.threshold')};\n    msg4 = {payload: flow.get('ws3.bat_lvl')};\n    msg5 = {payload: flow.get('ws3.mass')};\n    msg6 = {payload: flow.get('ws3.mpi')};\n    msg7 = {payload: flow.get('ws3.numberofpackages')};\n    msg8 = {payload: flow.get('ws3.chart')};\n    item_code = flow.get('ws3.item');*/\n   // break;\n}\nflow.set(\"ws.item\", item_code);\n\nreturn [msg1,msg2,msg3,msg4,msg5,msg6,msg7,msg8];",
+        "outputs": 8,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 1040,
+        "wires": [
+            [
+                "cac0c2744ff21387"
+            ],
+            [
+                "3517aae1118d5cf5"
+            ],
+            [
+                "9495bf736418bca1"
+            ],
+            [
+                "5d3b2fb1c7a665bb"
+            ],
+            [
+                "1c3b621b05b399ca"
+            ],
+            [
+                "994f0ac7ddb2abe5"
+            ],
+            [
+                "70030584f10446d2"
+            ],
+            [
+                "b07f8940799cf68c"
+            ]
+        ]
+    },
+    {
+        "id": "9495bf736418bca1",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "4aeeda84.4d6a14",
+        "order": 7,
+        "width": 4,
+        "height": 1,
+        "name": "",
+        "label": "Threshold",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 600,
+        "y": 1000,
+        "wires": []
+    },
+    {
+        "id": "b0146300b5a8441a",
+        "type": "inject",
+        "z": "0c07bffa7abc86ef",
+        "name": "Clear Chart",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[ ]",
+        "payloadType": "json",
+        "x": 410,
+        "y": 1200,
+        "wires": [
+            [
+                "b07f8940799cf68c"
+            ]
+        ]
+    },
+    {
+        "id": "5d3b2fb1c7a665bb",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "4aeeda84.4d6a14",
+        "order": 5,
+        "width": 4,
+        "height": 1,
+        "name": "",
+        "label": "Battery Level (%)",
+        "format": "{{msg.payload | number: 2}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 630,
+        "y": 1040,
+        "wires": []
+    },
+    {
+        "id": "994f0ac7ddb2abe5",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "4aeeda84.4d6a14",
+        "order": 8,
+        "width": 4,
+        "height": 1,
+        "name": "",
+        "label": "Weight Per Item (g)",
+        "format": "{{msg.payload | number: 2}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 630,
+        "y": 1120,
+        "wires": []
+    },
+    {
+        "id": "34cb1d0ac89a87a2",
+        "type": "debug",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2730,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "b07f8940799cf68c",
+        "type": "ui_chart",
+        "z": "0c07bffa7abc86ef",
+        "name": "Chart (Select Workstation)",
+        "group": "2e5cadec8091fcfc",
+        "order": 1,
+        "width": 20,
+        "height": 9,
+        "label": "Quantity",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "D/M HH:mm",
+        "interpolate": "linear",
+        "nodata": "NO DATA",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#73d216",
+            "#aec7e8",
+            "#ff7f0e",
+            "#73d216",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 660,
+        "y": 1200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "17cadf9e68628c49",
+        "type": "function",
+        "z": "0c07bffa7abc86ef",
+        "name": "Set query",
+        "func": "//get the workstation from every scale available in the location\nworkstation_scale1 = flow.get(\"scale1.ws\");\nworkstation_scale2 = flow.get(\"scale2.ws\");\nworkstation_scale3 = flow.get(\"scale3.ws\");\n\nlet measurement = \"empty\";\nlet item_code;\nlet item_name;\nlet qty;\nlet threshold;\nlet battery_lvl;\nlet conversion;\nlet mass;\nlet mpi;\nlet numberofpackages;\n\n//when new json obj receives from mqtt\nswitch (msg.topic)\n{\n    case \"gdWS1/main\":\n        msg.topic = workstation_scale1;\n        break;\n    case \"gdWS2/main\":\n        msg.topic = workstation_scale2;\n        break;\n    case \"gdWS3/main\":\n        msg.topic = workstation_scale3;\n        break;\n    default:\n        break;\n}\n\n//compare the workstation of the weighting scale\nswitch (msg.topic)\n{\n    case workstation_scale1:\n        measurement = \"gdWS1/main\";\n        item_code = flow.get('scale1.item');\n        item_name = flow.get(\"scale1.name\");\n        /*item_name = flow.get(\"payload.Item\");*/\n        qty = flow.get(\"scale1.qty\");\n        threshold = flow.get(\"scale1.threshold\");\n        battery_lvl = flow.get(\"scale1.bat_lvl\");\n        conversion = flow.get(\"scale1.conversion\");\n        mass = flow.get(\"scale1.mass\");\n        mpi = flow.get(\"scale1.mpi\");\n        numberofpackages = flow.get(\"scale1.numberofpackages\");\n        break;\n    case workstation_scale2:\n        measurement = \"gdWS2/main\";\n        item_code = flow.get('scale2.item');\n        item_name = flow.get(\"scale2.name\");\n        qty = flow.get(\"scale2.qty\");\n        threshold = flow.get(\"scale2.threshold\");\n        battery_lvl = flow.get(\"scale2.bat_lvl\");\n        conversion = flow.get(\"scale2.conversion\");\n        mass = flow.get(\"scale2.mass\");\n        mpi = flow.get(\"scale2.mpi\");\n        numberofpackages = flow.get(\"scale2.numberofpackages\");\n        break;\n    case workstation_scale3:\n        measurement = \"gdWS3/main\";\n        item_code = flow.get('scale3.item');\n        item_name = flow.get(\"scale3.name\");\n        qty = flow.get(\"scale3.qty\");\n        threshold = flow.get(\"scale3.threshold\");\n        battery_lvl = flow.get(\"scale3.bat_lvl\");\n        conversion = flow.get(\"scale3.conversion\");\n        mass = flow.get(\"scale3.mass\");\n        mpi = flow.get(\"scale3.mpi\");\n        numberofpackages = flow.get(\"scale3.numberofpackages\");\n        break;\n}\n\n\n\nswitch (msg.topic)\n{\n    case \"Workstation 1\":\n        \n        flow.set('ws1.item', item_code);\n        flow.set('ws1.name', item_name);\n        flow.set('ws1.qty', qty);\n        flow.set('ws1.threshold', threshold);\n        flow.set('ws1.bat_lvl', battery_lvl);\n        flow.set('ws1.conversion', conversion);\n        flow.set('ws1.mass', mass);\n        flow.set('ws1.mpi', mpi);\n        flow.set(\"ws1.numberofpackages\", numberofpackages);\n        break;\n    case \"Workstation 2\":\n        flow.set('ws2.item', item_code);\n        flow.set('ws2.name', item_name);\n        flow.set('ws2.qty', qty);\n        flow.set('ws2.threshold', threshold);\n        flow.set('ws2.bat_lvl', battery_lvl);\n        flow.set('ws2.conversion', conversion);\n        flow.set('ws2.mass', mass);\n        flow.set('ws2.mpi', mpi);\n        flow.set(\"ws2.numberofpackages\", numberofpackages);\n        break;\n    case \"Workstation 3\":\n        flow.set('ws3.item', item_code);\n        flow.set('ws3.name', item_name);\n        flow.set('ws3.qty', qty);\n        flow.set('ws3.threshold', threshold);\n        flow.set('ws3.bat_lvl', battery_lvl);\n        flow.set('ws3.conversion', conversion);\n        flow.set('ws3.mass', mass);\n        flow.set('ws3.mpi', mpi);\n        flow.set(\"ws3.numberofpackages\", numberofpackages);\n        break;\n}\nif (item_name === undefined)\n{\n    item_code = \"\";\n    item_name = \"No item available\";\n    qty = 0;\n    threshold = \"-\";\n    battery_lvl = \"-\"\n    conversion = \"-\";\n    mass = 0;\n    mpi = 0;\n    numberofpackages = 0;\n}\nmsg.query = 'select \"value\" from \"' + measurement + '\"' + 'order by time desc limit 100';\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 1560,
+        "wires": [
+            [
+                "eac50b5d6f719877",
+                "b1efa6c0a8c30039",
+                "b5d338904e7182c0",
+                "2676496203fef5b2",
+                "4767b3b6d58bdc2e",
+                "a7e18ccc5ac0de73",
+                "23497fbae83a0e82",
+                "6978a62c93140168",
+                "2a56600c5e18ac2a"
+            ]
+        ]
+    },
+    {
+        "id": "2a56600c5e18ac2a",
+        "type": "debug",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 510,
+        "y": 1460,
+        "wires": []
+    },
+    {
+        "id": "b31073ab937ef897",
+        "type": "debug",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 950,
+        "y": 1660,
+        "wires": []
+    },
+    {
+        "id": "a4c1892e0ccc2f5b",
+        "type": "debug",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 530,
+        "y": 2020,
+        "wires": []
+    },
+    {
+        "id": "c9f6a34cf9007b28",
+        "type": "debug",
+        "z": "0c07bffa7abc86ef",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 710,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "735a515e98e6a025",
+        "type": "ui_dropdown",
+        "z": "0c07bffa7abc86ef",
+        "name": "Select Workstation",
+        "label": "",
+        "tooltip": "",
+        "place": "Select Workstation",
+        "group": "4aeeda84.4d6a14",
+        "order": 1,
+        "width": 9,
+        "height": 1,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "",
+                "value": "Workstation 1",
+                "type": "str"
+            },
+            {
+                "label": "",
+                "value": "Workstation 2",
+                "type": "str"
+            },
+            {
+                "label": "",
+                "value": "Workstation 3",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "selection",
+        "topicType": "str",
+        "className": "",
+        "x": 170,
+        "y": 1020,
+        "wires": [
+            [
+                "df403eb4096aba92"
+            ]
+        ]
+    },
+    {
+        "id": "1c3b621b05b399ca",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "4aeeda84.4d6a14",
+        "order": 11,
+        "width": 4,
+        "height": 1,
+        "name": "",
+        "label": "Weight (g)",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 610,
+        "y": 1080,
+        "wires": []
+    },
+    {
+        "id": "70030584f10446d2",
+        "type": "ui_text",
+        "z": "0c07bffa7abc86ef",
+        "group": "4aeeda84.4d6a14",
+        "order": 10,
+        "width": 4,
+        "height": 1,
+        "name": "",
+        "label": "Number of Packages",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 640,
+        "y": 1160,
+        "wires": []
+    },
+    {
+        "id": "e58696b084d1c80c",
+        "type": "ui_spacer",
+        "z": "0c07bffa7abc86ef",
+        "name": "spacer",
+        "group": "d6ef9e306f82f807",
+        "order": 2,
+        "width": 17,
+        "height": 1
+    },
+    {
+        "id": "549b5aeb8c7f8f61",
+        "type": "ui_spacer",
+        "z": "0c07bffa7abc86ef",
+        "name": "spacer",
+        "group": "d6ef9e306f82f807",
+        "order": 3,
+        "width": 17,
+        "height": 1
+    },
+    {
+        "id": "05950a21497b282f",
+        "type": "ui_spacer",
+        "z": "0c07bffa7abc86ef",
+        "name": "spacer",
+        "group": "d6ef9e306f82f807",
+        "order": 4,
+        "width": 17,
+        "height": 1
+    },
+    {
+        "id": "f1f2056f256ac7d8",
+        "type": "ui_spacer",
+        "z": "0c07bffa7abc86ef",
+        "name": "spacer",
+        "group": "d6ef9e306f82f807",
+        "order": 5,
+        "width": 17,
+        "height": 1
+    },
+    {
+        "id": "aecfba4c5d19db40",
+        "type": "ui_spacer",
+        "z": "0c07bffa7abc86ef",
+        "name": "spacer",
+        "group": "d6ef9e306f82f807",
+        "order": 6,
+        "width": 17,
+        "height": 1
+    },
+    {
+        "id": "1b25b6c4b14871c9",
+        "type": "ui_spacer",
+        "z": "0c07bffa7abc86ef",
+        "name": "spacer",
+        "group": "d6ef9e306f82f807",
+        "order": 7,
+        "width": 17,
+        "height": 1
+    },
+    {
+        "id": "215e2b6dee865c20",
+        "type": "ui_spacer",
+        "z": "0c07bffa7abc86ef",
+        "name": "spacer",
+        "group": "d6ef9e306f82f807",
+        "order": 8,
+        "width": 17,
+        "height": 1
+    },
+    {
+        "id": "d46672bf206fc59e",
+        "type": "ui_spacer",
+        "z": "0c07bffa7abc86ef",
+        "name": "spacer",
+        "group": "d6ef9e306f82f807",
+        "order": 9,
+        "width": 17,
+        "height": 1
+    },
+    {
+        "id": "9596ba9940e7c428",
+        "type": "ui_spacer",
+        "z": "0c07bffa7abc86ef",
+        "name": "spacer",
+        "group": "d6ef9e306f82f807",
+        "order": 10,
+        "width": 17,
+        "height": 1
+    },
+    {
+        "id": "1639964c8c657c82",
+        "type": "ui_spacer",
+        "z": "0c07bffa7abc86ef",
+        "name": "spacer",
+        "group": "ed6f1410.bde42",
+        "order": 8,
+        "width": 10,
+        "height": 1
+    },
+    {
+        "id": "856e6ec572f2930e",
+        "type": "ui_spacer",
+        "z": "0c07bffa7abc86ef",
+        "name": "spacer",
+        "group": "cfb9167f.800f5",
+        "order": 8,
+        "width": 10,
+        "height": 1
+    },
+    {
+        "id": "6aaa2f857c3113af",
+        "type": "ui_spacer",
+        "z": "0c07bffa7abc86ef",
+        "name": "spacer",
+        "group": "4aeeda84.4d6a14",
+        "order": 3,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "f870b4c74435aa21",
+        "type": "ui_spacer",
+        "z": "0c07bffa7abc86ef",
+        "name": "spacer",
+        "group": "4aeeda84.4d6a14",
+        "order": 6,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "efaefe8456fa7a3e",
+        "type": "ui_spacer",
+        "z": "0c07bffa7abc86ef",
+        "name": "spacer",
+        "group": "4aeeda84.4d6a14",
+        "order": 9,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "7dc4fcbb3355fa4a",
+        "type": "ui_spacer",
+        "z": "0c07bffa7abc86ef",
+        "name": "spacer",
+        "group": "4aeeda84.4d6a14",
+        "order": 12,
+        "width": 5,
+        "height": 1
+    },
+    {
+        "id": "28d1262.fa1c8da",
+        "type": "ui_group",
+        "name": "Set 2",
+        "tab": "754b65b5.8517cc",
+        "order": 3,
+        "disp": false,
+        "width": 9,
+        "collapse": false
+    },
+    {
+        "id": "cf513a427bf0f699",
+        "type": "ui_group",
+        "name": "Set A",
+        "tab": "c7365c1a.3e266",
+        "order": 3,
+        "disp": false,
+        "width": 20,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "ed6f1410.bde42",
+        "type": "ui_group",
+        "name": "Workstation 1",
+        "tab": "c7365c1a.3e266",
+        "order": 1,
+        "disp": true,
+        "width": 20,
+        "collapse": false
+    },
+    {
+        "id": "cfb9167f.800f5",
+        "type": "ui_group",
+        "name": "Workstation 2",
+        "tab": "c7365c1a.3e266",
+        "order": 4,
+        "disp": true,
+        "width": 20,
+        "collapse": false
+    },
+    {
+        "id": "aa43408ee01e6c65",
+        "type": "ui_group",
+        "name": "Set B",
+        "tab": "c7365c1a.3e266",
+        "order": 6,
+        "disp": false,
+        "width": 20,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "211f2988135446d7",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "location2",
+        "name": "",
+        "usetls": false,
+        "tls": "9005477f6b6f979f",
+        "influxdbVersion": "1.x",
+        "url": "http://localhost:8086",
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "f5e8fa7a.9b57e8",
+        "type": "mqtt-broker",
+        "name": "gdws2mqtt",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "WS2",
+        "usetls": false,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "638442ba.8026fc",
+        "type": "mqtt-broker",
+        "name": "scale1mqtt",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "gdws1",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "d1a70d0d05e11b6f",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "location1",
+        "name": "",
+        "usetls": false,
+        "tls": "9005477f6b6f979f",
+        "influxdbVersion": "1.x",
+        "url": "http://localhost:8086",
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "4aeeda84.4d6a14",
+        "type": "ui_group",
+        "name": "Set 1",
+        "tab": "754b65b5.8517cc",
+        "order": 1,
+        "disp": false,
+        "width": "9",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "eb4ec883742204ec",
+        "type": "ui_group",
+        "d": true,
+        "name": "Edit Username",
+        "tab": "bc880f3d040c4193",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "3ebd3482849ef27d",
+        "type": "ui_group",
+        "name": "View Users",
+        "tab": "bc880f3d040c4193",
+        "order": 2,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "914dcea615c2771a",
+        "type": "MySQLdatabase",
+        "name": "",
+        "host": "localhost",
+        "port": "3306",
+        "db": "user",
+        "tz": "",
+        "charset": "UTF8"
+    },
+    {
+        "id": "d26b599bf72ca5c5",
+        "type": "ui_group",
+        "name": "Register",
+        "tab": "76ae964a82086ac0",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "4b2faf29b6a0d98a",
+        "type": "ui_group",
+        "name": "Log-In",
+        "tab": "5d3397565de42a0a",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "9339b186cccd5de6",
+        "type": "ui_group",
+        "name": "Update Password",
+        "tab": "1860c26bedbee2d4",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "c8b70fb7e75f6e93",
+        "type": "ui_group",
+        "name": "Workstation 1 Chart Only",
+        "tab": "c7365c1a.3e266",
+        "order": 2,
+        "disp": false,
+        "width": 20,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "3f5fa5b968aa051a",
+        "type": "ui_group",
+        "name": "Workstation 2 Chart Only",
+        "tab": "c7365c1a.3e266",
+        "order": 5,
+        "disp": false,
+        "width": 20,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "2e5cadec8091fcfc",
+        "type": "ui_group",
+        "name": "Set 3",
+        "tab": "754b65b5.8517cc",
+        "order": 2,
+        "disp": false,
+        "width": 20,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "754b65b5.8517cc",
+        "type": "ui_tab",
+        "name": "Station Dashboard V1",
+        "icon": "dashboard",
+        "order": 5,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "c7365c1a.3e266",
+        "type": "ui_tab",
+        "name": "Station Dashboard V2",
+        "icon": "dashboard",
+        "order": 6,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "9005477f6b6f979f",
+        "type": "tls-config",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "",
+        "keyname": "",
+        "caname": "",
+        "servername": "",
+        "verifyservercert": false
+    },
+    {
+        "id": "bc880f3d040c4193",
+        "type": "ui_tab",
+        "name": "Settings",
+        "icon": "dashboard",
+        "order": 9,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "76ae964a82086ac0",
+        "type": "ui_tab",
+        "name": "Registration Page",
+        "icon": "dashboard",
+        "order": 3,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "5d3397565de42a0a",
+        "type": "ui_tab",
+        "name": "Log-In Page",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "1860c26bedbee2d4",
+        "type": "ui_tab",
+        "name": "New Password",
+        "icon": "dashboard",
+        "order": 10,
+        "disabled": false,
+        "hidden": false
+    }
+]

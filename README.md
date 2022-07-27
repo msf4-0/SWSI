@@ -7,7 +7,7 @@ The embedded system is developed on PlatformIO IDE and built on the Arduino fram
 
 ## **User Guide** ##
 
-Follow the [documentation](https://drive.google.com/drive/folders/1bG_YV6uIwTKT_12CuCw8axnyWVp6YvOv?usp=sharing) process to properly set up and use the scales.
+Follow the [documentation](https://drive.google.com/drive/folders/1bG_YV6uIwTKT_12CuCw8axnyWVp6YvOv?usp=sharing) process for further detailed explaination.
 
 ## **Installation** ## 
 1. This application is supported in both Windows and Ubuntu 20.04 
@@ -24,5 +24,3 @@ Follow the [documentation](https://drive.google.com/drive/folders/1bG_YV6uIwTKT_
       5. You can check the condition of the services by using the command prompt ```systemctl status mysql.service```
   - Install Influxdb at https://portal.influxdata.com/downloads/
   - Install ERPNext using vultr (A cloud platform) at https://www.vultr.com/
-
- ## **Basic User Guide** ##

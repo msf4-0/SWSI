@@ -5,10 +5,6 @@ The embedded system is developed on PlatformIO IDE and built on the Arduino fram
 
 <img src= "https://user-images.githubusercontent.com/76152507/164983018-ce873b46-68f4-4928-9d6d-3f753c45c488.png" width="500" height="400" />
 
-## **User Guide** ##
-
-Follow the [documentation](https://drive.google.com/drive/folders/1bG_YV6uIwTKT_12CuCw8axnyWVp6YvOv?usp=sharing) process for further detailed explaination.
-
 ## **Installation** ## 
 1. This application is supported in both Windows and Ubuntu 20.04 
 2. This application have been tested on vultr cloud platform, other cloud platforms have not been tested.
@@ -24,3 +20,15 @@ Follow the [documentation](https://drive.google.com/drive/folders/1bG_YV6uIwTKT_
       5. You can check the condition of the services by using the command prompt ```systemctl status mysql.service```
   - Install Influxdb at https://portal.influxdata.com/downloads/
   - Install ERPNext using vultr (A cloud platform) at https://www.vultr.com/
+
+## **Basic User Guide** ##
+
+There are several process that you should be aware of before running the flow;
+2. Smart Weighing Scale configuration - Visual Studio Code - WIFI SSID, password
+3. ERPNext token, secret
+4. Node-red modules
+5. influxdb location1 and location2 (in nodered)
+6. mysql database node in nodered
+
+## **Detailed Documentation** ##
+Follow the [documentation](https://drive.google.com/drive/folders/1bG_YV6uIwTKT_12CuCw8axnyWVp6YvOv?usp=sharing) process for further detailed explaination.

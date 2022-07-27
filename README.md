@@ -25,4 +25,4 @@ Follow the [documentation](https://drive.google.com/drive/folders/1bG_YV6uIwTKT_
   - Install Influxdb at https://portal.influxdata.com/downloads/
   - Install ERPNext using vultr (A cloud platform) at https://www.vultr.com/
 
- ## **Basic User Guide**##
+ ## **Basic User Guide** ##

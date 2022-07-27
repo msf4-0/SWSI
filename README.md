@@ -24,7 +24,7 @@ The embedded system is developed on PlatformIO IDE and built on the Arduino fram
 ## **Basic User Guide** ##
 
 There are several process that you should be aware of before running the flow;
-2. Smart Weighing Scale configuration - Visual Studio Code - WIFI SSID, password
+2. In Microsoft Visual Studio, when trying to build and/or upload the code. In main.cpp, change Smart Weighing Scale configuration - Visual Studio Code - WIFI SSID, password
 3. ERPNext token, secret
 4. Node-red modules
 5. influxdb location1 and location2 (in nodered)
